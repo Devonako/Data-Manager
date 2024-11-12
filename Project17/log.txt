@@ -1,0 +1,8 @@
+Generated ssn to file stdout.
+Generated ssn to file stdout.
+Generated ssn to file a.txt.
+Generated ssn to file a.txt.
+Generated ssn to file a.txt.
+
+Generated name to file stdout.
+
