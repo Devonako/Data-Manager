@@ -114,6 +114,16 @@ public:
 };
 
 
+class big_number {
+public:
+	size_t digits;
+	s value;
+
+	fn add(big_number one, big_number two) {
+		
+	}
+};
+
 
 
 
@@ -137,6 +147,90 @@ std::string reverse_str(s in) {
 	}
 	return ext;
 }
+
+std::string generate_ccn(std::string sep) {
+	s result = "";
+	vs types = { "6011", "4491" };
+	s type = types.at(rand() % types.size());
+	result += type;
+	size_t ccn_len = 16;
+	int index = type.size();
+	// Separator
+	while (index < ccn_len + sep.empty() ? 0 : sep.length()) {
+		if (index % 4 == 0) {
+			index++;
+			result += std::to_string(rand() % 10);
+		}
+		index++;
+	}
+}
+
+std::string generate_number(int digits, int decimals) {
+	s result = "";
+	for (var a = 0; a < digits; a++) {
+		result += std::to_string(rand() % 10);
+	}
+	if (decimals > 0) {
+		result += ".";
+	}
+	for (var a = 0; a < decimals; a++) {
+		result += std::to_string(rand() % 10);
+	}
+	return result;
+}
+
+std::string generate_asc_string(size_t min_length, size_t max_length) {
+	s result = "";
+	let length = (rand() % (max_length - min_length)) + min_length;
+	for (var a = 0; a < length; a++) {
+		result += std::to_string(27 + (rand() % 100));
+	}
+	return result;
+}
+
+std::string generate_utf8_string(int min_length, int max_length) {
+
+}
+
+// TODO: Param of dateType
+std::string generate_date() {
+	s result;
+	int month = rand() % 12 + 1;
+	result += (month > 9 ? std::to_string(month) : ("0" + std::to_string(month)));
+	result += "/";
+	int day = rand() % 31 + 1;
+	int year = rand() % 124 + 1 + 1900;
+	//result += std::to_string
+}
+
+std::string moneyizer(std::string in, std::string money_sign) {
+	return money_sign + in;
+}
+
+
+class governor {
+public:
+	s his_name;
+	
+};
+
+// 1 -> 1.00
+// 2.599 -> 2.60
+// 2.555555 -> 2.55555500000
+// -1 -> -1.0
+// -20.00 -> -20
+std::string convert_decimals(std::string in, int decimal_places) {
+	size_t l = in.find_first_of('.');
+	bool was_found = (l == std::string::npos);
+	if (was_found) {
+
+	}
+	else {
+
+	}
+}
+
+
 
 std::string get_extension(s in) {
 	string ext = "";
@@ -194,7 +288,7 @@ std::string generate_name() {
 	return names.at(rand() % names.size());
 }
 
-s generate_city{
+s generate_city () {
 	vector<string> cities = {
 		"Dallas",
 		"New York City",
