@@ -11,6 +11,7 @@ Sort, mask, synthesize, convert, etc.
 #include <iostream>
 #include <regex>
 #include <fstream>
+#include <algorithm>
 #include "util.h"
 using namespace std;
 #define s string
@@ -23,13 +24,35 @@ using namespace std;
 #define add push_back
 #define let auto
 #define fn auto
+#define triple long double
+#define integer int
+#define INT int
+#define pp poop
+#define jameis picksix
+#define voi void
+
+#define var auto
+#define fn auto
+
+
+voi jameis() {
+	console("Wild Jameis throws pick-six, costing his team the game!");
+}
+
+#define winston jameis();
+
+
+#define r result
+#define vr v<r>
+#define var auto
 
 vs names = {
 	"John",
 	"Mary",
 	 "Jack",
 	 "David",
-	 "Paul"
+	 "Paul",
+	 "Sara"
 };
 
 vs regexes = {
@@ -60,7 +83,7 @@ public:
 
 enum dataActionType
 {
-	generate,convert, mask, sort, report
+	generate,convert, mask, sort, report, govern
 };
 
 enum generateDataType {
@@ -96,7 +119,7 @@ public:
 
 	std::string name;
 	fileType ftype;
-	v<record> r;
+	v<record> rec;
 	v<column> c;
 	int remove;
 };
@@ -125,11 +148,6 @@ public:
 };
 
 
-
-
-#define r result
-#define vr v<r>
-#define var auto
 size_t contain(s in, s st) {
 	/*if (in.find(st) != std::string::npos) {
 		return true;
@@ -148,6 +166,86 @@ std::string reverse_str(s in) {
 	return ext;
 }
 
+std::string truncate_str(s in, size_t len) {
+	var s_len = in.length();
+	while (s_len > len) {
+		s_len -= 1;
+		in.pop_back();
+	}
+	return in;
+}
+
+//s tolo(s in) {
+//	std::transform(in.begin(), in.end(), in.begin(), tolower);
+//	return in;
+//}
+//
+//s tohi(s in) {
+//	std::transform(in.begin(), in.end(), in.begin(), toupper);
+//	return in;
+//}
+
+s replace(s in, s tis, s with) {
+	size_t occurences = 0;
+	size_t last_index = 0;
+	int first = 0;
+	s replace;
+	while (var a = in.find(tis) != std::string::npos) {
+		
+		replace += in.substr(last_index, a - last_index);
+		first = 1;
+		replace += with;
+		occurences++;
+		last_index = a;
+	}
+	if (occurences == 0) {
+		return in;
+	}
+	return replace;
+}
+
+s replaceFirst(s in, s tis, s with) {
+	s result;
+	if (var b = in.find(with) != std::string::npos) {
+		for (var a = 0; a < b; a++) {
+			result += in.at(a);
+		}
+		result += with;
+		for (var a = b + with.length(); a < in.length() + with.length(); a++) {
+			result += in.at(a);
+		}
+	}
+	else {
+		return in;
+	}
+	
+}
+
+
+int compare_char(char one, char two) {
+	v<char> ones = { 'a', 'b' };
+	long double ll = 1000;
+	//long double ll;
+	return ll;
+}
+
+double proximity(s one, s two) {
+	for (char c : one) {
+		for (char c2 : two) {
+			do
+			{
+				console9log("aa");
+			} while (true);
+		}
+	}
+	return 1.0;
+}
+
+/*
+dfjhdfj
+*/
+
+
 std::string generate_ccn(std::string sep) {
 	s result = "";
 	vs types = { "6011", "4491" };
@@ -163,7 +261,10 @@ std::string generate_ccn(std::string sep) {
 		}
 		index++;
 	}
+	return result;
 }
+
+
 
 std::string generate_number(int digits, int decimals) {
 	s result = "";
@@ -189,7 +290,8 @@ std::string generate_asc_string(size_t min_length, size_t max_length) {
 }
 
 std::string generate_utf8_string(int min_length, int max_length) {
-
+	s result;
+	return result;
 }
 
 // TODO: Param of dateType
@@ -201,6 +303,7 @@ std::string generate_date() {
 	int day = rand() % 31 + 1;
 	int year = rand() % 124 + 1 + 1900;
 	//result += std::to_string
+	return result;
 }
 
 std::string moneyizer(std::string in, std::string money_sign) {
@@ -211,7 +314,49 @@ std::string moneyizer(std::string in, std::string money_sign) {
 class governor {
 public:
 	s his_name;
-	
+	s his_royal_governance;
+	s user_file;
+	char bit_f; // For ?
+	char bit_f2;
+
+	void do_govern() {
+		if (authenticate() == 0) {
+			
+		}
+		else {
+			// That's a bad governor
+		}
+	}
+
+private:
+
+	// Authenticate the royal governor
+	int authenticate() {
+		if (get_user().compare(his_name) == 0) {
+			return 0;
+		}
+		else { // Anything else?
+			return 1;
+		}
+	}
+#define _CRT_SECURE_NO_WARNINGS
+	// Get his username
+	s get_user() {
+		s result;
+		char bufferring[2000] = { 0 };
+		FILE * f = fopen(user_file.c_str(), "rb");
+		if (f) {
+			fread(bufferring, 2000, 1, f);
+			result = std::string(bufferring);
+			result = replace(result, "\r", "");
+			result = replace(result, "\n", "");
+			result = replace(result, " ", "");
+			return result;
+		}
+		else {
+			return result;
+		}
+	}
 };
 
 // 1 -> 1.00
@@ -221,6 +366,7 @@ public:
 // -20.00 -> -20
 std::string convert_decimals(std::string in, int decimal_places) {
 	size_t l = in.find_first_of('.');
+	s result;
 	bool was_found = (l == std::string::npos);
 	if (was_found) {
 
@@ -228,6 +374,7 @@ std::string convert_decimals(std::string in, int decimal_places) {
 	else {
 
 	}
+	return result;
 }
 
 
@@ -254,6 +401,7 @@ std::string redact(s in) {
 	}
 	return ext;
 }
+
 
 std::string generate_email(std::vector<string> prefix, std:: string domain) {
 	s email;
@@ -298,7 +446,7 @@ s generate_city () {
 		"Rio de Janeiro",
 		"Los Angeles"
 };
-
+	return cities.at(rand() % cities.size());
 }
 
 std::string encrypt(s in) {
@@ -552,7 +700,7 @@ void h_web(s qu) {
 	return;
 }
 // Govern the data
-
+void make_me_a_sandwich();
 
 // Get  a hold on the data
 // Identify it
@@ -585,6 +733,14 @@ v<dataAction> parseQuery (std::string query) {
 	int next_name = 0;
 	int next_named_column = 0;
 	var token_number = 0;
+	if (tokens.size() <= 4) {
+		for (var token : tokens) {
+			if (token.compare("sandwich") == 0) {
+				make_me_a_sandwich();
+				break;
+			}
+		}
+	}
 	for (var token : tokens) {
 		token_number++;
 		if (next_name) {
@@ -708,7 +864,40 @@ v<dataAction> parseQuery (std::string query) {
 }
 
 
+#define print(x) console9log("x");
+#define pr(x) console9log(x);
+#define getin(x)  std::getline(std::cin, x);
+#define eq(x, y) x = y;
+#define sinit(x) s(x);
+#define ifis(x, y, z) if (x.compare(y) == 0) {z}
 
+
+
+void make_me_a_sandwich() {
+	s x;
+	s in;
+	eq(x, "Sure, most certainly.")
+	pr(x)
+	eq(x, "What toppings though, sir?")
+	pr(x)
+	getin(in)
+		ifis(in, "pepp", {
+		pr("Nice choice")
+			})
+}
+
+void do_something_already() {
+	s x = "a";
+	
+}
+
+
+
+
+void pokemans() {
+	print("Charmander, bulbasaur, or pikachu?")
+		
+}
 
 // Main ecevution
 int main(int argc, const char** argv) {

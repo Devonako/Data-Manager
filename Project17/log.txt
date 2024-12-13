@@ -6,3 +6,9 @@ Generated ssn to file a.txt.
 
 Generated name to file stdout.
 
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
