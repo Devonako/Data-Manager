@@ -10,13 +10,13 @@ class testResults {
 	
 };
 
-size_t contain(s in, s st) {
-	/*if (in.find(st) != std::string::npos) {
-		return true;
-	}
-	return false;*/
-	return in.find(st) != std::string::npos;
-}
+//size_t contain(s in, s st) {
+//	/*if (in.find(st) != std::string::npos) {
+//		return true;
+//	}
+//	return false;*/
+//	return in.find(st) != std::string::npos;
+//}
 
 void ssdsj() {
 
