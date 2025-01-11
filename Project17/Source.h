@@ -31,10 +31,11 @@ using namespace std;
 #define var auto
 #define fn auto
 
-
+/*
 voi jameis() {
 	console("Wild Jameis throws pick-six, costing his team the game!");
 }
+*/
 
 #define winston jameis();
 
@@ -42,3 +43,7 @@ voi jameis() {
 #define r result
 #define vr v<r>
 #define var auto
+
+// Function definitions
+
+std::string generate_ccn(std::string sep);

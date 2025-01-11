@@ -147,12 +147,15 @@
     <ClCompile Include="Convert.cpp" />
     <ClCompile Include="Dump.cpp" />
     <ClCompile Include="Filem.cpp" />
+    <ClCompile Include="logging.cpp" />
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="tests.cpp" />
     <ClCompile Include="util.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Constants.h" />
+    <ClInclude Include="fileUtil.h" />
+    <ClInclude Include="Governor.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="Header1.h" />
     <ClInclude Include="Source.h" />

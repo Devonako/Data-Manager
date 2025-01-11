@@ -1,4 +1,4 @@
-/*
+﻿/*
 Data Manager - 
 
 Performs data management operations.
@@ -52,11 +52,31 @@ vs names = {
 	 "Jack",
 	 "David",
 	 "Paul",
-	 "Sara"
+	 "Sara",
+	 "Duncid",
+	 "Tara",
+	 "Tate",
+	 "Devon",
+	 "Kevin"
 };
 
 vs regexes = {
-	"\\b(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})\\b"
+	"\\b(?:4[0-9]{12}(?:[0-9]{3})?|[25][1-7][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})\\b",
+		 // "Credit Cards
+		 "\\b(?:\\d[ -]*?){13,16}\\b",
+				// eMAILS
+			"\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+			// 
+			/*	
+			"Phone Numbers"] += len(re.findall(r"\b(?:\+?1[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b", file_content))
+				data_types["Social Security Numbers"] += len(re.findall(r"\b\d{3}-\d{2}-\d{4}\b", file_content))
+				data_types["IP Addresses"] += len(re.findall(r"\b(?:\d{1,3}\.){3}\d{1,3}\b", file_content))
+				# Add more regex patterns for other data types below(examples provided)
+				data_types["Driver's Licenses"] += len(re.findall(r"\b[A-Z]{2}\d{6,8}\b", file_content))  # Example pattern, adjust as needed
+				data_types["Passport Numbers"] += len(re.findall(r"\b[A-Z]\d{7}\b", file_content))  # Example pattern, adjust as needed
+				data_types["Bank Account Numbers"] += len(re.findall(r"\b\d{9,18}\b", file_content))  # Example pattern, adjust as needed
+				data_types["Dates of Birth"] += len(re.findall(r"\b\d{1,2}/\d{1,2}/\d{2,4}\b", file_content))  # Example pattern, adjust as needed*/
+			//	# For "Health Records", you'll likely need more sophisticated techniques than basic regex
 };
 
 
@@ -87,10 +107,10 @@ enum dataActionType
 };
 
 enum generateDataType {
-	name, ssn, email
+	name, ssn, email, uuid, tool, state, city, country
 };
 enum fileType {
-	CSV, JSON, XML
+	CSV, JSON, XML, YAML, XLS, XLSX, PDF, JPG, DCM, PPT, PPTX, DOC, DOCX, TXT
 };
 enum dataTypeType {
 	UTF8, NUMERIC, ASCII, DATE, TIME, TIMESTAMP
@@ -122,6 +142,7 @@ public:
 	v<record> rec;
 	v<column> c;
 	int remove;
+	std::string separator;
 };
 
 class dataAction {
@@ -159,9 +180,9 @@ size_t contain(s in, s st) {
 std::string reverse_str(s in) {
 	string ext = "";
 	size_t len = in.length();
-	int pos = len;
+	int pos = len - 1;
 	for (; pos >= 0; pos--) {
-		ext += in[pos];
+		ext.push_back(in.at(pos));
 	}
 	return ext;
 }
@@ -203,6 +224,12 @@ s replace(s in, s tis, s with) {
 	}
 	return replace;
 }
+
+/*
+s dsjhsdj() {
+
+}
+*/
 
 s replaceFirst(s in, s tis, s with) {
 	s result;
@@ -291,6 +318,7 @@ std::string generate_asc_string(size_t min_length, size_t max_length) {
 
 std::string generate_utf8_string(int min_length, int max_length) {
 	s result;
+	result = "💩";
 	return result;
 }
 
@@ -324,6 +352,7 @@ public:
 			
 		}
 		else {
+			// print("You are no governor");
 			// That's a bad governor
 		}
 	}
@@ -380,16 +409,16 @@ std::string convert_decimals(std::string in, int decimal_places) {
 
 
 std::string get_extension(s in) {
-	string ext = "";
+	string ext = std::string("");
 	size_t len = in.length();
-	int pos = len;
+	int pos = len - 1;
 	for (; pos >= 0; pos--) {
 		if (in[pos] == '.') {
 			break;
 		}
-		ext += in[pos];
+		ext.push_back(in.at(pos));
 	}
-	return ext;
+	return reverse_str(ext);
 }
 
 std::string redact(s in) {
@@ -397,7 +426,7 @@ std::string redact(s in) {
 	size_t len = in.length();
 	int pos = len;
 	for (; pos >= 0; pos--) {
-		ext += "*";
+		ext.push_back('*');
 	}
 	return ext;
 }
@@ -528,7 +557,7 @@ void show_report(vr res) {
 		< / head>
 		< body>")
 	for (vv(a) : res) {
-
+	fprintf(stdout,
 	}
 }
 */
@@ -559,8 +588,24 @@ void handleOutput(std::string data, std::string fileName, int mode) {
 	
 }
 
+
+
+
 void handleGenerate(dataAction action) {
 	var a = 0;
+	std::string record_string;
+	for (var column : action.out.c) {
+		switch (column.gend)
+			
+		{
+		case generateDataType::name:
+			record_string += names.at(rand() % names.size());
+			break;
+		default:
+			break;
+		}
+		record_string += action.out.separator;
+	}
 	if (action.dd == generateDataType::name) {
 		for (; a < action.count; a++) {
 			
@@ -583,8 +628,29 @@ void handleGenerate(dataAction action) {
 	}
 }
 
+s replace_with(s input, s replacement, size_t start, size_t end) {
+	s output = "";
+	// TODO
+	size_t replacement_index = 0;
+	for (size_t index = 0; index < input.length(); index++) {
+		if (index >= start && index <= end) {
+			if (replacement.size() >= replacement_index) {
+				output += replacement.at(replacement_index);
+			}
+			else {
+				output += input.at(index);
+			}
+		}
+	}
+	return output;
+}
+
 void handleMask(dataAction action) {
 	//iterate_files(action.input);
+	var data = get_data(action.input);
+	var results = scan_name(data, action.input);
+	//redact()
+	handleOutput("Masked source " + action.input + " to output " + action.output + ".\n", "log.txt", std::ios::app);
 }
 
 // CSV
@@ -603,6 +669,16 @@ std::string convert_line(dataAction action, std::string in) {
 		}
 		out += "},";
 	}
+	if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::XML) {
+		vs res = split(in, ",");
+		size_t index = 0;
+		out += "<";
+		for (var ent : res) {
+			out = out + "\"" + action.out.c.at(index).name + "\">" + action.out.c.at(index).value + "</" + action.out.c.at(index).name + ">\n";
+			index += 1;
+		}
+		//out += "},";
+	}
 	return out;
 }
 
@@ -614,15 +690,21 @@ void handleConvert(dataAction action) {
 	vs res = split(content, "\n");
 	size_t size = res.size();
 	size_t line_n = 0;
+	s output = "";
 	for (var line : res) {
 		line_n += 1;
 		var liner = convert_line(action, line);
 		if (line_n == res.size()) {
 			if (action.out.ftype == fileType::JSON) {
 				liner.pop_back();
+				output += liner;
 			}
 		}
+		else {
+			output += liner;
+		}
 	}
+	handleOutput(output, action.output, std::ios::out);
 }
 
 void handleReport(dataAction action) {
@@ -632,6 +714,21 @@ void handleReport(dataAction action) {
 	ifs.close();
 	handleOutput(content, action.output, std::ios::out);
 }
+void handleSort(dataAction action) {
+	std::ifstream ifs(action.input);
+	std::string content((std::istreambuf_iterator<char>(ifs)),
+		(std::istreambuf_iterator<char>()));
+	ifs.close();
+	var lines = split(content, "\n");
+	std::sort(lines.begin(), lines.end());
+	content = "";
+	for (var line : lines) {
+		content += line;
+		content += "\n";
+	}
+	handleOutput(content, action.output, std::ios::out);
+}
+
 
 void handle_action(v<dataAction> actions) {
 	for (var action : actions) {
@@ -639,13 +736,13 @@ void handle_action(v<dataAction> actions) {
 			handleGenerate(action);
 		}
 		else if (action.type == dataActionType::sort) {
-			
+			handleSort(action);
 		}
 		else if (action.type == dataActionType::mask) {
-
+			handleMask(action);
 		}
 		else if (action.type == dataActionType::convert) {
-			
+			handleConvert(action);
 		}
 		else if (action.type == dataActionType::report) {
 			handleReport(action);
@@ -752,7 +849,7 @@ v<dataAction> parseQuery (std::string query) {
 				if (get_extension(ac.input).compare("xml") == 0) {
 					ac.in.ftype = fileType::XML;
 				}
-				if (get_extension(ac.input).compare("JSON") == 0) {
+				if (get_extension(ac.input).compare("json") == 0) {
 					ac.in.ftype = fileType::JSON;
 				}
 			}
@@ -764,7 +861,7 @@ v<dataAction> parseQuery (std::string query) {
 				if (get_extension(ac.output).compare("xml") == 0) {
 					ac.out.ftype = fileType::XML;
 				}
-				if (get_extension(ac.output).compare("JSON") == 0) {
+				if (get_extension(ac.output).compare("json") == 0) {
 					ac.out.ftype = fileType::JSON;
 				}
 			}
@@ -809,13 +906,22 @@ v<dataAction> parseQuery (std::string query) {
 		else if (token.compare("convert") == 0) {
 			ac.type = dataActionType::convert;
 		}
+		else if (token.compare("conv") == 0) {
+			ac.type = dataActionType::convert;
+		}
 		else if (token.compare("report") == 0) {
+			ac.type = dataActionType::report;
+		}
+		else if (token.compare("rep") == 0) {
 			ac.type = dataActionType::report;
 		}
 		else if (token.compare("sort") == 0) {
 			ac.type = dataActionType::sort;
 		}
 		else if (token.compare("generate") == 0) {
+			ac.type = dataActionType::generate;
+		}
+		else if (token.compare("gen") == 0) {
 			ac.type = dataActionType::generate;
 		}
 		else if (token.compare("csv") == 0) {
@@ -834,7 +940,12 @@ v<dataAction> parseQuery (std::string query) {
 			break;
 		}
 		else if (token.compare("govern") == 0) {
-
+			if (tokens.size() >= token_number + 2) {
+				handle_govern(tokens.at(token_number + 1));
+			}
+			else {
+				std::cout << "Ensure a data source is specified to govern in query." << std::endl;
+			}
 		}
 		else if (token.compare("xml") == 0) {
 			ac.ftype = fileType::XML;
@@ -899,6 +1010,8 @@ void pokemans() {
 		
 }
 
+
+
 // Main ecevution
 int main(int argc, const char** argv) {
 	/*console("test");
@@ -907,6 +1020,7 @@ int main(int argc, const char** argv) {
 
 	var a = 0;
 	s q = "";
+	console9log(generate_utf8_string(1, 1));
 	//nsole9log(a);
 	do {
 		console9log("Enter query");
