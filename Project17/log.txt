@@ -52,3 +52,63 @@ Generated name to file .
 
 Generated name to file .
 
+Generated name to file gg.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file out.txt.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file .
+
+Generated name to file stdout.
+
+Generated name to file .
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Masked source stdout to output stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
+Generated name to file .
+
