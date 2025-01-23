@@ -1110,7 +1110,7 @@ v<dataAction> parseQuery (std::string query) {
 					ac.in.ftype = fileType::DOC;
 				}
 				else if (get_extension(ac.input).compare("ppt") == 0) {
-					ac.in.ftype = fileType::ppt;
+					ac.in.ftype = fileType::PPT;
 				}
 			}
 			else {
