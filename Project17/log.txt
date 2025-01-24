@@ -193,3 +193,315 @@ Completed query mask file s to file stdout .... -> next!
 Masked source s to output stdout.
 
 Completed query mask file s to file stdout .... -> next!
+Generated name to file .
+
+Completed query Generate 10 names .... -> next!
+Generated name to file .
+
+Completed query Generate 10 names to stdout .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Generated name to file .
+
+Completed query  .... -> next!
+Completed query hello .... -> next!
+Completed query hello .... -> next!
+Completed query hello .... -> next!
+Generated name to file stdout.
+
+Completed query generate 20 names to file stdout .... -> next!
+Generated name to file stdout[d.
+
+Completed query generate 20 names to file stdout[D .... -> next!

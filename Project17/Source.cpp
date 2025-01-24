@@ -101,7 +101,9 @@ vs names = {
 	 "Joe",
 	 "Donald",
 	 "Jimmy",
-	 "Laremy"
+	 "Laremy",
+	 "Gerald",
+	 "Maya"
 	 
 };
 
@@ -303,7 +305,7 @@ std::string reverse_str(s in) {
 
 void print_copyright() {
 // #define print(x) var a = x.size(); if ( a < for (var b = 0; (b < 80 - a / 2) {std::cout << " "; } std::cout << x << std::endl;
-	s build_tag = "R-010-012325-0900";
+	s build_tag = "B-010-012425-0900";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
 	//print(copyright);
 }
@@ -846,8 +848,10 @@ void show_report(vr res) {
 		< / head> \
 		< body>");
 	fprintf(stdout, "<table><th> Data Class</th> <th>Data Class</th></");
+	size_t count = 0;
 	for (vv(a) : res) {
-		fprintf(stdout, "<tr><td>%s</td><td>%s></td></tr>", a.source, a.dataClass);
+		fprintf(stdout, "<tr %s><td>%s</td><td>%s></td></tr>", count % 2 == 0 ? "style=\"color: blue;\"" : "style=\"color:red;\"", a.source, a.dataClass);
+		count++;
 	}
 }
 
@@ -866,7 +870,7 @@ void parseData(std::string data, dataAction action) {
 	
 }
 
-void handleOutput(std::string data, std::string fileName, int mode) {
+void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode) {
 	// Create and open a text file
 	if (fileName.compare("stdout") == 0) {
 			fprintf(stdout, "%s\n", data.c_str());
