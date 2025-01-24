@@ -112,3 +112,84 @@ Generated name to file .
 
 Generated name to file .
 
+Generated name to file .
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to stdout.
+Generated name to file stdout.
+
+Generate to aa.
+Generated name to file aa.
+
+Masked source aa to output stdout.
+
+Masked source aa to output stdout.
+
+Masked source aa to output stdout.
+
+Generated name to file y.
+
+Completed query generate 10 names to file y .... -> next!
+Completed query report file y .... -> next!
+Completed query report file y to file stdout .... -> next!
+Masked source y to output stdout.
+
+Completed query mask file y to file stdout .... -> next!
+Generated name to file stdout.
+
+Completed query generate 10 names to file stdout .... -> next!
+Generated name to file d.
+
+Completed query generate 10 names to file d .... -> next!
+Generated name to file s.
+
+Completed query generate 10 names to file s .... -> next!
+Generated name to file s.
+
+Completed query generate 10 names to file s .... -> next!
+Masked source s to output stdout.
+
+Completed query mask file s to file stdout .... -> next!
+Masked source s to output stdout.
+
+Completed query mask file s to file stdout .... -> next!

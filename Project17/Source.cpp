@@ -13,6 +13,17 @@ Sort, mask, synthesize, convert, etc.
 #include <fstream>
 #include <algorithm>
 #include "util.h"
+// Define "pretty" colors for terminal
+#define ANSI_COLOR_RED "\x1b[31m"
+#define ANSI_COLOR_GREEN "\x1b[32m"
+#define ANSI_COLOR_YELLOW "\x1b[33m"
+#define ANSI_COLOR_BLUE "\x1b[34m"
+#define ANSI_COLOR_MAGENTA "\x1b[35m"
+#define ANSI_COLOR_CYAN "\x1b[36m"
+#define ANSI_COLOR_RESET "\x1b[0m"
+#define ANSI_COLOR_UNDERLINE "\x1b[4m"
+#define ANSI_COLOR_BOLD "\x1b[1m"
+#define ANSI_COLOR_ITALIC "\x1b[3m"
 using namespace std;
 int num_queries = 0;
 #define s string
@@ -35,6 +46,8 @@ int num_queries = 0;
 #define var auto
 #define fn auto
 
+#include "logging.cpp"
+logger logg;
 
 voi jameis() {
 	console("Wild Jameis throws pick-six, costing his team the game!");
@@ -83,7 +96,12 @@ vs names = {
 	 "Humberto",
 	 "Jose",
 	 "Michael",
-	 "Nadine"
+	 "Nadine",
+	 "Holly",
+	 "Joe",
+	 "Donald",
+	 "Jimmy",
+	 "Laremy"
 	 
 };
 
@@ -124,6 +142,7 @@ vs regexes = {
 //	}
 //}
 
+
 class result {
 public:
 	 int start;
@@ -137,6 +156,64 @@ public:
 	 
 };
 
+vs states = {
+	"Alabama",
+	"Arizona",
+	"Arkansas",
+	"Connecticut",
+	"Florida",
+	"New York",
+	"Texas",
+	"California",
+	"Oregon",
+	"Washington",
+	"Idaho",
+	"Montana",
+	"New Mexico",
+	"New Hampshire",
+	"Oklahoma",
+	"Lousiana",
+	"Georgia",
+	"South Carolina",
+	"North Carolina",
+	"Mississippi",
+	"Kansas",
+	"Michigan",
+	"Ohio",
+	"Illinois",
+	"Tennessee",
+	"South Dakota",
+	"North Dakota",
+	"Kentucky",
+	"Maryland",
+	"Vermont"
+	//"Kentuckyland"
+};
+
+vs tools = {
+	"screwdriver",
+	"hammer",
+	"nuts",
+	"nail",
+	"saw"
+};
+
+s generate_tool() {
+	s res;
+	//srand(time(0));
+	return tools.at(rand() % tools.size());
+}
+
+//s generate_city () {
+//	s res;
+//	return res;
+//}
+
+s generate_country() {
+	s res;
+	return res;
+}
+
 enum dataActionType
 {
 	generate,convert, mask, sort, report, govern
@@ -146,7 +223,7 @@ enum generateDataType {
 	name, ssn, email, uuid, tool, state, city, country
 };
 enum fileType {
-	CSV, JSON, XML, YAML, XLS, XLSX, PDF, JPG, DCM, PPT, PPTX, DOC, DOCX, TXT, TSV, PSV
+	CSV, JSON, XML, YAML, XLS, XLSX, PDF, JPG, DCM, PPT, PPTX, DOC, DOCX, TXT, TSV, PSV, GIF, PNG
 };
 enum dataTypeType {
 	UTF8, NUMERIC, ASCII, DATE, TIME, TIMESTAMP
@@ -160,9 +237,9 @@ class column {
 public:
 	std::string value;
 	int position;
-	generateDataType gend;
-	std::string name;
-	dataTypeType dt;
+	generateDataType gend = generateDataType::name;
+	std::string name = "default";
+	dataTypeType dt = dataTypeType::ASCII;
 };
 
 class record {
@@ -174,22 +251,22 @@ public:
 class datum {
 public:
 
-	std::string name;
-	fileType ftype;
+	std::string name = "stdout";
+	fileType ftype = fileType::CSV;
 	v<record> rec;
 	v<column> c;
 	int remove;
-	std::string separator;
+	std::string separator = "\t";
 };
 
 class dataAction {
 public:
 	dataActionType type;
-	size_t count;
+	size_t count = 100;
 	generateDataType dd;
-	fileType ftype;
-	std::string input;
-	std::string output;
+	fileType ftype = fileType::CSV;
+	std::string input = "stdin";
+	std::string output = "stdout";
 	datum in;
 	datum out;
 };
@@ -225,10 +302,10 @@ std::string reverse_str(s in) {
 }
 
 void print_copyright() {
-#define print(x) std::cout << x << std::endl;
-	s build_tag = "R-010-012125-0500";
+// #define print(x) var a = x.size(); if ( a < for (var b = 0; (b < 80 - a / 2) {std::cout << " "; } std::cout << x << std::endl;
+	s build_tag = "R-010-012325-0900";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
-	print(copyright);
+	//print(copyright);
 }
 
 std::string truncate_str(s in, size_t len) {
@@ -558,6 +635,57 @@ std::string redact(s in) {
 	return ext;
 }
 
+std::string redact(s in, size_t start, size_t end) {
+	//string ext = "";
+	//size_t len = in.length();
+	//int pos = 0;
+	//for (; pos < end; pos++) {
+	//	if (pos >= len) {
+	//		break;
+	//	}
+	//	ext.push_back('*');
+	//}
+	//return ext;
+
+	string ext = "";
+	size_t len = in.length();
+	int pos = 0;
+	for (; pos < len; pos++) {
+		if (pos < end && pos >= start) {
+			ext.push_back('*');
+		}
+		else {
+			ext.push_back(in.at(pos));
+		}
+	}
+	return ext;
+}
+
+std::string redact(s in, size_t start, size_t end, char redact_char) {
+	//string ext = "";
+	//size_t len = in.length();
+	//int pos = 0;
+	//for (; pos < end; pos++) {
+	//	if (pos >= len) {
+	//		break;
+	//	}
+	//	ext.push_back('*');
+	//}
+	//return ext;
+
+	string ext = "";
+	size_t len = in.length();
+	int pos = 0;
+	for (; pos < len; pos++) {
+		if (pos < end && pos >= start) {
+			ext.push_back(redact_char);
+		}
+		else {
+			ext.push_back(in.at(pos));
+		}
+	}
+	return ext;
+}
 
 std::string generate_email(std::vector<string> prefix, std:: string domain) {
 	s email;
@@ -659,7 +787,7 @@ v<result> scan_name(s buffer, s source) {
 	v<result> results;
 	size_t pos = 0;
 	for (auto name : names) {
-		if ((pos = contain(buffer, name)) != std::string::npos) {
+		if ((pos = buffer.find(name)) != std::string::npos) {
 			result re;
 			re.start = pos;
 			re.end = pos + name.length();
@@ -708,27 +836,34 @@ void print_results(vr res) {
 }
 
 
-/*
+
 void show_report(vr res) {
 	fprintf(stdout, "<!DOCTYPE html> \
-		< html lang = "en" > \
-		<head><meta charset = "UTF-8">
-		<meta name = "viewport" content = "width=device-width, initial-scale=1.0">
-		<title>Document< / title>
-		< / head>
-		< body>")
+		< html lang = \"en\" > \
+		<head><meta charset = \"UTF - 8\"> \
+		<meta name = \"viewport\" content = \"width = device - width, initial - scale = 1.0\"> \
+		<title>Document< / title> \
+		< / head> \
+		< body>");
+	fprintf(stdout, "<table><th> Data Class</th> <th>Data Class</th></");
 	for (vv(a) : res) {
-	fprintf(stdout,
+		fprintf(stdout, "<tr><td>%s</td><td>%s></td></tr>", a.source, a.dataClass);
 	}
 }
-*/
+
 
 //s get_buffer() {
 //	
 //}
 
-void parseData(std::string data) {
-
+// From data parse headers based on file type
+void parseData(std::string data, dataAction action) {
+	switch (action.in.ftype)
+	{
+	default:
+		break;
+	}
+	
 }
 
 void handleOutput(std::string data, std::string fileName, int mode) {
@@ -756,50 +891,58 @@ void handleGenerate(dataAction action) {
 	var a = 0;
 	std::string record_string;
 	if (action.out.c.size() > 0) {
-		for (var column : action.out.c) {
-			switch (column.gend)
+		for (; a < action.count; a++) {
+			for (var column : action.out.c) {
+				switch (column.gend)
 
-			{
-			case generateDataType::name:
-				record_string += names.at(rand() % names.size());
-				break;
-			case generateDataType::ssn:
-				record_string += generate_ssn();
-				break;
-			case generateDataType::email:
-				//record_string += generate_email()
-				break;
-			default:
-				record_string += generate_asc_string(1, rand() % 50 + 1);
-				break;
+				{
+				case generateDataType::name:
+					record_string += names.at(rand() % names.size());
+					break;
+				case generateDataType::ssn:
+					record_string += generate_ssn();
+					break;
+				case generateDataType::email:
+					//record_string += generate_email()
+					break;
+				default:
+					record_string += generate_asc_string(1, rand() % 50 + 1);
+					break;
+				}
+				record_string += action.out.separator;
 			}
-			record_string += action.out.separator;
+			record_string += "\n";
 		}
 	}
 	else if (action.in.c.size() > 0) {
-		for (var column : action.in.c) {
-			switch (column.gend)
+		for (; a < action.count; a++) {
+			for (var column : action.in.c) {
+				switch (column.gend)
 
-			{
-			case generateDataType::name:
-				record_string += names.at(rand() % names.size());
-				break;
-			case generateDataType::ssn:
-				record_string += generate_ssn();
-				break;
-			case generateDataType::email:
-				//record_string += generate_email()
-				break;
-			default:
-				record_string += generate_asc_string(1, rand() % 50 + 1);
-				break;
+				{
+				case generateDataType::name:
+					record_string += names.at(rand() % names.size());
+					break;
+				case generateDataType::ssn:
+					record_string += generate_ssn();
+					break;
+				case generateDataType::email:
+					//record_string += generate_email()
+					break;
+				default:
+					record_string += generate_asc_string(1, rand() % 50 + 1);
+					break;
+				}
+				record_string += action.out.separator;
 			}
-			record_string += action.out.separator;
+			record_string += "\n";
 		}
 	}
 	if (record_string.size() > 0) {
 		
 		handleOutput(record_string, action.output, ios::app);
+		logg.log_it("Generate to " + action.output + ".");
+		//print("Gen -d")
 		// Log
 	}
 	// Os this
@@ -851,10 +994,12 @@ void handleMask(dataAction action) {
 	var data = get_data(action.input);
 	var results = scan_name(data, action.input);
 	for (var result : results) {
-
+		data = redact(data, result.start, result.end);
 	}
+	handleOutput(data, action.output, std::ios::out);
 	//redact()
 	handleOutput("Masked source " + action.input + " to output " + action.output + ".\n", "log.txt", std::ios::app);
+// Make gth
 }
 
 // CSV
@@ -892,6 +1037,52 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
+	else if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::PSV) {
+		vs res = split(in, ",");
+		size_t index = 0;
+		for (var ent : res) {
+			out = out + ent + "|";
+		}
+		out.pop_back();
+		//out += "},";
+	}
+	else if (action.in.ftype == fileType::PSV && action.out.ftype == fileType::TSV) {
+		vs res = split(in, "|");
+		size_t index = 0;
+		for (var ent : res) {
+			out = out + ent + "\t";
+		}
+		out.pop_back();
+		//out += "},";
+	}
+	else if (action.in.ftype == fileType::PSV && action.out.ftype == fileType::CSV) {
+		vs res = split(in, "|");
+		size_t index = 0;
+		for (var ent : res) {
+			out = out + ent + ",";
+		}
+		out.pop_back();
+		//out += "},";
+	}
+	else if (action.in.ftype == fileType::TSV && action.out.ftype == fileType::CSV) {
+		vs res = split(in, "\t");
+		size_t index = 0;
+		for (var ent : res) {
+			out = out + ent + ",";
+		}
+		out.pop_back();
+		//out += "},";
+	}
+	else if (action.in.ftype == fileType::TSV && action.out.ftype == fileType::PSV) {
+		vs res = split(in, "\t");
+		size_t index = 0;
+		for (var ent : res) {
+			out = out + ent + "|";
+		}
+		out.pop_back();
+		//out += "},";
+	}
+	
 	return out;
 }
 
@@ -969,6 +1160,7 @@ void handle_action(v<dataAction> actions) {
 		else if (action.type == dataActionType::report) {
 			handleReport(action);
 		}
+		
 	}
 }
 
@@ -1056,6 +1248,7 @@ v<dataAction> parseQuery (std::string query) {
 	int rows = 0;
 	int next_name = 0;
 	int next_named_column = 0;
+	int next_named_dt = 0;
 	var token_number = 0;
 	if (tokens.size() <= 4) {
 		for (var token : tokens) {
@@ -1152,6 +1345,17 @@ v<dataAction> parseQuery (std::string query) {
 			}
 			next_named_column = 0;
 		}
+		if (next_named_dt) {
+		//
+			var size = ac.in.c.size();
+			if (size == 0) {
+
+			}
+			else if (size > 0) {
+				//if (ac.out.)
+			}
+			next_named_dt = 0;
+		}
 		if (token.compare("mask") == 0) {
 			
 			ac.type = dataActionType::mask;
@@ -1162,6 +1366,9 @@ v<dataAction> parseQuery (std::string query) {
 		}
 		else if (token.compare("nc") == 0) {
 			next_named_column = 1;
+		}
+		else if (token.compare("dt") == 0) {
+			next_named_dt = 1;
 		}
 		else if (token.compare("col") == 0) {
 			next_named_column = 1;
@@ -1280,7 +1487,7 @@ v<dataAction> parseQuery (std::string query) {
 #define eq(x, y) x = y;
 #define sinit(x) s(x);
 #define ifis(x, y, z) if (x.compare(y) == 0) {z}
-
+#define t auto t
 
 
 void make_me_a_sandwich() {
@@ -1365,6 +1572,7 @@ int main(int argc, const char** argv) {
 		}
 		var result = parseQuery(q);
 		handle_action(result);
+		logg.log_it("Completed query " + q + " .... -> next!");
 		num_queries += 1;
 		update_num_queries_used("queries.txt.log");
 	} while (true);
