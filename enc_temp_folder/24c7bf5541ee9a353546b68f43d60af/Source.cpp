@@ -1445,25 +1445,10 @@ v<dataAction> parseQuery (std::string query) {
 		else if (token.compare("file") == 0) {
 			next_name = 1;
 		}
-		else if (token.compare("f") == 0) {
-			next_name = 1;
-		}
-		else if (token.compare("archivo") == 0) {
-			next_name = 1;
-		}
-		else if (token.compare("fuente") == 0) {
-			next_name = 1;
-		}
-		else if (token.compare("cible") == 0) {
-			next_name = 1;
-		}
 		else if (token.compare("source") == 0) {
 			next_name = 1;
 		}
 		else if (token.compare("target") == 0) {
-			next_name = 1;
-		}
-		else if (token.compare("objetivo") == 0) {
 			next_name = 1;
 		}
 		else if (token.compare("convert") == 0) {
