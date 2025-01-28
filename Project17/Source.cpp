@@ -101,7 +101,9 @@ vs names = {
 	 "Joe",
 	 "Donald",
 	 "Jimmy",
-	 "Laremy"
+	 "Laremy",
+	 "Gerald",
+	 "Maya"
 	 
 };
 
@@ -837,6 +839,7 @@ void show_report(vr res) {
 		< / head> \
 		< body>");
 	fprintf(stdout, "<table><th> Data Class</th> <th>Data Class</th></");
+	size_t count = 0;
 	for (vv(a) : res) {
 		fprintf(stdout, "<tr><td>%s</td><td>%s></td></tr>", a.source.c_str(), a.dataClass.c_str());
 	}
@@ -917,7 +920,7 @@ void parseData(std::string data, dataAction action) {
 	
 }
 
-void handleOutput(std::string data, std::string fileName, int mode) {
+void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode) {
 	// Create and open a text file
 	if (fileName.compare("stdout") == 0) {
 			fprintf(stdout, "%s\n", data.c_str());

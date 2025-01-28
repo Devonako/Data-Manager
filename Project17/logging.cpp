@@ -9,7 +9,7 @@ enum log_type {
 
 class logger {
 private:
-	void handleOutput(std::string data, std::string fileName, int mode) {
+	void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode) {
 		// Create and open a text file
 		if (fileName.compare("stdout") == 0) {
 			fprintf(stdout, "%s\n", data.c_str());

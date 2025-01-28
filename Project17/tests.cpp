@@ -1,5 +1,5 @@
 #include <string>
-#define s std::string
+//#define s std::string
 #include "Source.h"
 
 class testResult {
