@@ -103,7 +103,8 @@ vs names = {
 	 "Jimmy",
 	 "Laremy",
 	 "Gerald",
-	 "Maya"
+	 "Maya",
+	 "Alex"
 	 
 };
 
@@ -188,7 +189,8 @@ vs states = {
 	"North Dakota",
 	"Kentucky",
 	"Maryland",
-	"Vermont"
+	"Vermont",
+	"Maine"
 	//"Kentuckyland"
 };
 
@@ -204,6 +206,54 @@ s generate_tool() {
 	s res;
 	//srand(time(0));
 	return tools.at(rand() % tools.size());
+}
+
+s left_pad(s in, char pad, int num, int num2) {
+	s res;
+	if (num < num2) {
+		int to_this = num2 - num;
+		for (int a = 0; a < to_this; a++) {
+			res.push_back(pad);
+		}
+		return res + in;
+	}
+	else {
+		return in;
+	}
+}
+
+s right_pad(s in, char pad, int num, int num2) {
+	if (num < num2) {
+		int to_this = num2 - num;
+		for (int a = 0; a < to_this; a++) {
+			in.push_back(pad);
+		}
+		return in;
+	}
+	else {
+		return in;
+	}
+}
+s generate_date();
+
+s generate_time() {
+	s res;
+	res += left_pad( std::to_string(rand() % 12), '0', 1, 2);
+	res += ":";
+	res += left_pad(std::to_string(rand() % 60), '0', 1, 2);
+	// AM PM
+	res += " ";
+	res += rand() % 2 > 0 ? "AM" : "PM";
+	return res;
+}
+
+s generate_timestamp() {
+	// Any options
+	s res;
+	res += generate_date();
+	res += " ";
+	res += generate_time();
+	return res;
 }
 
 //s generate_city () {
@@ -222,10 +272,10 @@ enum dataActionType
 };
 
 enum generateDataType {
-	name, ssn, email, uuid, tool, state, city, country, id
+	none, name, ssn, email, uuid, tool, state, city, country, id
 };
 enum fileType {
-	CSV, JSON, XML, YAML, XLS, XLSX, PDF, JPG, DCM, PPT, PPTX, DOC, DOCX, TXT, TSV, PSV, GIF, PNG
+	CSV, JSON, XML, YAML, XLS, XLSX, PDF, JPG, DCM, PPT, PPTX, DOC, DOCX, TXT, TSV, PSV, GIF, PNG, DB
 };
 enum dataTypeType {
 	UTF8, NUMERIC, ASCII, DATE, TIME, TIMESTAMP
@@ -233,7 +283,7 @@ enum dataTypeType {
 
 class sortOptions {
 public:
-	enum dataTypeType type;
+	enum dataTypeType type = dataTypeType::ASCII;
 	
 };
 
@@ -245,9 +295,14 @@ class column {
 public:
 	std::string value;
 	int position;
-	generateDataType gend = generateDataType::name;
+	generateDataType gend = generateDataType::none;
 	std::string name = "default";
 	dataTypeType dt = dataTypeType::ASCII;
+	int prec = -1;
+	int size = -1;
+	int left_pad = 0;
+	int right_pad = 0;
+
 };
 
 class record {
@@ -271,12 +326,13 @@ class dataAction {
 public:
 	dataActionType type;
 	size_t count = 100;
-	generateDataType dd;
+	generateDataType dd = generateDataType::none;
 	fileType ftype = fileType::CSV;
 	std::string input = "stdin";
 	std::string output = "stdout";
 	datum in;
 	datum out;
+	sortOptions sort_options;
 };
 
 
@@ -438,9 +494,9 @@ std::string generate_number(int digits, int decimals) {
 
 std::string generate_asc_string(size_t min_length, size_t max_length) {
 	s result = "";
-	let length = (rand() % (max_length - min_length)) + min_length;
+	let length = (rand() % (max_length - min_length > 0 ? max_length - min_length : 50)) + min_length;
 	for (var a = 0; a < length; a++) {
-		result += std::to_string(27 + (rand() % 100));
+		result += std::string{ (char) (27 + (rand() % 100)) };
 	}
 	return result;
 }
@@ -466,7 +522,13 @@ std::string generate_date() {
 std::string moneyizer(std::string in, std::string money_sign) {
 	return money_sign + in;
 }
+enum datum_s_t {
+	FILEE, TABLE, DATA_TYPE
+};
 
+class datum_s {
+
+};
 
 class governor {
 public:
@@ -475,6 +537,8 @@ public:
 	s user_file;
 	char bit_f; // For ?
 	char bit_f2;
+	// Permissions users to datums
+	//map<s
 
 	void do_govern() {
 		if (authenticate() == 0) {
@@ -1307,6 +1371,9 @@ void handle_govern(s qu) {
 
 // Wbquery
 
+void report_err(s message) {
+	std::cerr << ANSI_COLOR_RED << "Error: " << message << ANSI_COLOR_RESET << std::endl;
+}
 
 v<dataAction> parseQuery (std::string query) {
 	// Idea: Leniency in token interpretation
@@ -1321,6 +1388,8 @@ v<dataAction> parseQuery (std::string query) {
 	int next_name = 0;
 	int next_named_column = 0;
 	int next_named_dt = 0;
+	int next_named_prec = 0;
+	int next_named_size = 0;
 	var token_number = 0;
 	if (tokens.size() <= 4) {
 		for (var token : tokens) {
@@ -1377,6 +1446,9 @@ v<dataAction> parseQuery (std::string query) {
 				else if (get_extension(ac.input).compare("ppt") == 0) {
 					ac.in.ftype = fileType::PPT;
 				}
+				else if (ac.input.compare("database") == 0) {
+					ac.in.ftype = fileType::DB;
+				}
 			}
 			else {
 				ac.output = token;
@@ -1394,6 +1466,9 @@ v<dataAction> parseQuery (std::string query) {
 				}
 				if (get_extension(ac.output).compare("json") == 0) {
 					ac.out.ftype = fileType::JSON;
+				}
+				else if (ac.output.compare("database") == 0) {
+					ac.out.ftype = fileType::DB;
 				}
 			}
 			next_name = 0;
@@ -1416,6 +1491,22 @@ v<dataAction> parseQuery (std::string query) {
 				ac.in.c.push_back(c);
 			}
 			next_named_column = 0;
+		}
+		if (next_named_prec) {
+			var size = ac.in.c.size();
+			if (size == 0) {
+				// Error need named_col
+				report_err("Precede precisions specification with a named column.");
+			}
+			else if (size > 0) {
+				if (ac.out.c.size() > 0) {
+					ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
+				}
+				else {
+				//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
+				}
+			}
+			next_named_dt = 0;
 		}
 		if (next_named_dt) {
 		//
@@ -1441,6 +1532,12 @@ v<dataAction> parseQuery (std::string query) {
 		}
 		else if (token.compare("dt") == 0) {
 			next_named_dt = 1;
+		}
+		else if (token.compare("prec") == 0) {
+			// next_named_prec = 0;
+		}
+		else if (token.compare("size") == 0) {
+			// next_named_size = 0;
 		}
 		else if (token.compare("col") == 0) {
 			next_named_column = 1;
@@ -1484,6 +1581,10 @@ v<dataAction> parseQuery (std::string query) {
 		else if (token.compare("sort") == 0) {
 			ac.type = dataActionType::sort;
 		}
+		// clasificar
+		else if (token.compare("clasificar") == 0) {
+			ac.type = dataActionType::sort;
+		}
 		else if (token.compare("generate") == 0) {
 			ac.type = dataActionType::generate;
 		}
@@ -1515,6 +1616,10 @@ v<dataAction> parseQuery (std::string query) {
 		}
 		else if (token.compare("xml") == 0) {
 			ac.ftype = fileType::XML;
+		}
+		else if (token.compare("numsort") == 0) {
+			ac.type = dataActionType::sort;
+			ac.sort_options.type = dataTypeType::NUMERIC;
 		}
 		else if (token.compare("names") == 0) {
 			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
