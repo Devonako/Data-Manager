@@ -261,6 +261,21 @@ s generate_timestamp() {
 //	return res;
 //}
 
+vs countries = {
+	"China",
+	"Mongolia",
+	"United States",
+	"Canada",
+	"Mexico",
+	"Guatemala",
+	"Belize",
+	"Brazil",
+	"France",
+	"Zimbabwe",
+	"South Africa",
+	"Australia"
+};
+
 s generate_country() {
 	s res;
 	return res;
@@ -300,7 +315,7 @@ public:
 	dataTypeType dt = dataTypeType::ASCII;
 	int prec = -1;
 	int size = -1;
-	int left_pad = 0;
+	int left_pad = -1;
 	int right_pad = 0;
 
 };
@@ -366,11 +381,13 @@ std::string reverse_str(s in) {
 }
 
 void print_copyright() {
-#define print(x) var a = x.size(); if ( a < for (var b = 0; (b < 80 - a / 2) {std::cout << " "; } std::cout << x << std::endl; a = x.size(); if ( a < for (var b = 0; (b < 80 - a / 2) {std::cout << " "; } 
-	s build_tag = "B-010-012725-0900";
+#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; (b < 80 - a / 2); b ++) {std::cout << " "; }} std::cout << x << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; (b < 80 - a / 2); b++) {std::cout << " "; } }
+	s build_tag = "B-010-012925-2100";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
-	//print(copyright);
+	print(copyright);
+
 }
+#define print(x) std::cout << x << std::endl;
 
 std::string truncate_str(s in, size_t len) {
 	var s_len = in.length();
@@ -381,6 +398,7 @@ std::string truncate_str(s in, size_t len) {
 	return in;
 }
 
+//#include <algorithm>
 //s tolo(s in) {
 //	std::transform(in.begin(), in.end(), in.begin(), tolower);
 //	return in;
@@ -460,6 +478,7 @@ dfjhdfj
 
 std::string generate_ccn(std::string sep) {
 	s result = "";
+	// otherx
 	vs types = { "6011", "4491" };
 	s type = types.at(rand() % types.size());
 	result += type;
@@ -522,9 +541,11 @@ std::string generate_date() {
 std::string moneyizer(std::string in, std::string money_sign) {
 	return money_sign + in;
 }
-enum datum_s_t {
-	FILEE, TABLE, DATA_TYPE
-};
+namespace datumTypes {
+	enum datum_s_t {
+		FILE, TABLE, DATA_TYPE
+	};
+}
 
 class datum_s {
 
@@ -741,6 +762,7 @@ std::string redact(s in, size_t start, size_t end, char redact_char) {
 	return ext;
 }
 
+s generate_name();
 
 // TODO alternative easier
 std::string generate_email(std::vector<string> prefix, std:: string domain) {
@@ -751,6 +773,19 @@ std::string generate_email(std::vector<string> prefix, std:: string domain) {
 	}
 	email = email + at + domain;
 	return email;
+}
+
+std::string generate_f_email() {
+	s email;
+	return generate_name() + "." + generate_name() + "example.com";
+}
+
+std::string generate_email() {
+	s email;
+	vs domains = {
+		"gmail.com", "yahoo.com", "outlook.com", "hotmail.com"
+	};
+	return generate_name() + "." + generate_name() + domains.at(rand() % domains.size());
 }
 
 std::string generate_ssn() {
@@ -923,7 +958,7 @@ void show_report(vr res) {
 	fprintf(f, "</table> </body></html>");
 	fclose(f);
 	// SHow in CHROME
-	system("chrome report.html");
+	system("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe report.html");
 }
 
 
@@ -1021,7 +1056,7 @@ void handleGenerate(dataAction action) {
 					record_string += generate_ssn();
 					break;
 				case generateDataType::email:
-					//record_string += generate_email()
+					record_string += generate_email();
 					break;
 				case generateDataType::id:
 					record_string += std::to_string(a);
@@ -1048,7 +1083,7 @@ void handleGenerate(dataAction action) {
 					record_string += generate_ssn();
 					break;
 				case generateDataType::email:
-					//record_string += generate_email()
+					record_string += generate_email();
 					break;
 				case generateDataType::id:
 					record_string += std::to_string(a);
@@ -1060,9 +1095,10 @@ void handleGenerate(dataAction action) {
 					record_string += tools.at(rand() % tools.size());
 					break;
 				case generateDataType::country:
-					//record_string + = 
+					record_string += generate_country();
 					break;
 				case generateDataType::uuid:
+					//record_string += gener();
 					// gener
 				default:
 					record_string += generate_asc_string(1, rand() % 50 + 1);
@@ -1266,7 +1302,25 @@ void handleSort(dataAction action) {
 		(std::istreambuf_iterator<char>()));
 	ifs.close();
 	var lines = split(content, "\n");
-	std::sort(lines.begin(), lines.end());
+	switch (action.sort_options.type)
+	{
+	case dataTypeType::NUMERIC: {
+		v<double> ds;
+		for (var line : lines) {
+			ds.push_back(strtod(line.c_str(), 0));
+		}
+		std::sort(ds.begin(), ds.end());
+		lines.clear();
+		for (var de : ds) {
+			lines.push_back(std::to_string(de));
+		}
+		break;
+	}
+	default:
+		std::sort(lines.begin(), lines.end());
+		break;
+	}
+	
 	content = "";
 	for (var line : lines) {
 		content += line;
@@ -1455,18 +1509,46 @@ v<dataAction> parseQuery (std::string query) {
 				if (get_extension(ac.output).compare("csv") == 0) {
 					ac.out.ftype = fileType::CSV;
 				}
-				if (get_extension(ac.output).compare("psv") == 0) {
+				else if (get_extension(ac.output).compare("psv") == 0) {
 					ac.out.ftype = fileType::PSV;
 				}
-				if (get_extension(ac.output).compare("tsv") == 0) {
+				else if (get_extension(ac.output).compare("tsv") == 0) {
 					ac.out.ftype = fileType::TSV;
 				}
-				if (get_extension(ac.output).compare("xml") == 0) {
+				else if (get_extension(ac.output).compare("xml") == 0) {
 					ac.out.ftype = fileType::XML;
 				}
 				if (get_extension(ac.output).compare("json") == 0) {
 					ac.out.ftype = fileType::JSON;
 				}
+				else if (get_extension(ac.output).compare("yaml") == 0) {
+					ac.out.ftype = fileType::YAML;
+				}
+				else if (get_extension(ac.output).compare("pdf") == 0) {
+					ac.out.ftype = fileType::PDF;
+				}
+				else if (get_extension(ac.output).compare("dcm") == 0) {
+					ac.out.ftype = fileType::DCM;
+				}
+				else if (get_extension(ac.output).compare("docx") == 0) {
+					ac.out.ftype = fileType::DOCX;
+				}
+				else if (get_extension(ac.output).compare("xlsx") == 0) {
+					ac.out.ftype = fileType::XLSX;
+				}
+				else if (get_extension(ac.output).compare("pptx") == 0) {
+					ac.out.ftype = fileType::PPTX;
+				}
+				else if (get_extension(ac.output).compare("jpg") == 0) {
+					ac.out.ftype = fileType::JPG;
+				}
+				else if (get_extension(ac.output).compare("doc") == 0) {
+					ac.out.ftype = fileType::DOC;
+				}
+				else if (get_extension(ac.output).compare("ppt") == 0) {
+					ac.out.ftype = fileType::PPT;
+				}
+			
 				else if (ac.output.compare("database") == 0) {
 					ac.out.ftype = fileType::DB;
 				}
@@ -1503,6 +1585,7 @@ v<dataAction> parseQuery (std::string query) {
 					ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 				else {
+					ac.in.c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
 				//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 			}
@@ -1534,10 +1617,10 @@ v<dataAction> parseQuery (std::string query) {
 			next_named_dt = 1;
 		}
 		else if (token.compare("prec") == 0) {
-			// next_named_prec = 0;
+			next_named_prec = 0;
 		}
 		else if (token.compare("size") == 0) {
-			// next_named_size = 0;
+			 next_named_size = 0;
 		}
 		else if (token.compare("col") == 0) {
 			next_named_column = 1;
@@ -1734,6 +1817,7 @@ int update_num_queries_used(std::string filename) {
 		char buffer[1000] = { 0 };
 		sprintf(buffer, "%d", num_queries);
 		fwrite(buffer, 1000, 1, f);
+		return 0;
 	}
 	else {
 		return -1;

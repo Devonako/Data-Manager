@@ -613,3 +613,32 @@ Completed query  .... -> next!
 Generated name to file .
 
 Completed query  .... -> next!
+Generated name to file stdout.
+
+Completed query generate 20 names to file stdout .... -> next!
+Generated name to file stdout.
+
+Completed query generate 20 names to f stdout .... -> next!
+Generated name to file stdout.
+
+Generated name to file a.
+
+Completed query generate 20 names to f stdout and generate 20 names to f a .... -> next!
+Completed query convert a.json to b.xml .... -> next!
+Completed query loser .... -> next!
+Completed query fg .... -> next!
+Completed query git .... -> next!
+Completed query a .... -> next!
+Completed query  .... -> next!
+Generated name to file bf.
+
+Completed query generate 20 names to file bf and sort file bf to file stdout .... -> next!
+Completed query report file bf to file stdout .... -> next!
+Completed query convert file bf to file a.json .... -> next!
+Completed query report file a.json to f stdout .... -> next!
+Generate to stdout.
+Completed query generate to file stdout nc a .... -> next!
+Generate to stdout.
+Completed query generate to file stdout nc a dt ascii .... -> next!
+Generate to stdout.
+Completed query generate nc a to file stdout .... -> next!
