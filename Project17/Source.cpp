@@ -389,14 +389,17 @@ std::string reverse_str(s in) {
 	return ext;
 }
 
+// gnerarte 20 names
+
 void print_copyright() {
-#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; b < (80 - a / 2); b ++) {std::cout << " "; }} std::cout << ANSI<<  x << << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; b < (80 - a / 2); b++) {std::cout << " "; } }
+	// s (80 - s.size()) / 2
+#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; b < ((80 - a) / 2)); b ++) {std::cout << " "; }} std::cout << ANSI_COLOR_RED ANSI_COLOR_UNDERLINE <<  x << ANSI_COLOR_RESET << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; b < (80 - a) / 2); b++) {std::cout << " "; } }
 	s build_tag = "B-010-020225-0500";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
 	//print(copyright);
 
 }
-#define print(x) std::cout << x << std::endl;
+#define print_left(x) std::cout << x << std::endl;
 
 std::string truncate_str(s in, size_t len) {
 	var s_len = in.length();
@@ -466,7 +469,7 @@ int compare_char(char one, char two) {
 	v<char> ones = { 'a', 'b' };
 	long double ll = 1000;
 	//long double ll;
-	return ll;
+return ll;
 }
 
 double proximity(s one, s two) {
@@ -531,14 +534,50 @@ std::string generate_asc_string(size_t min_length, size_t max_length) {
 	s result = "";
 	let length = (rand() % (max_length - min_length > 0 ? max_length - min_length : 50)) + min_length;
 	for (var a = 0; a < length; a++) {
-		result += std::string{ (char) (27 + (rand() % 100)) };
+		result += std::string{ (char)(27 + (rand() % 100)) };
+	}
+	return result;
+}
+#include <string>
+#include <cstdint>
+
+std::string utf8_from_code_points(uint32_t code_point) {
+	std::string result;
+	if (code_point <= 0x7F) {
+		result += static_cast<char>(code_point);
+	}
+	else if (code_point <= 0x7FF) {
+		result += static_cast<char>(0xC0 | ((code_point >> 6) & 0x1F));
+		result += static_cast<char>(0x80 | (code_point & 0x3F));
+	}
+	else if (code_point <= 0xFFFF) {
+		result += static_cast<char>(0xE0 | ((code_point >> 12) & 0x0F));
+		result += static_cast<char>(0x80 | ((code_point >> 6) & 0x3F));
+		result += static_cast<char>(0x80 | (code_point & 0x3F));
+	}
+	else if (code_point <= 0x10FFFF) {
+		result += static_cast<char>(0xF0 | ((code_point >> 18) & 0x07));
+		result += static_cast<char>(0x80 | ((code_point >> 12) & 0x3F));
+		result += static_cast<char>(0x80 | ((code_point >> 6) & 0x3F));
+		result += static_cast<char>(0x80 | (code_point & 0x3F));
 	}
 	return result;
 }
 
 std::string generate_utf8_string(int min_length, int max_length) {
+	if (max_length <= 0) {
+		max_length = 1;
+	}
 	s result;
-	result = "💩";
+	// This many characters 
+	int length = (rand() % max_length) + 1;
+	if (length < min_length) {
+		length = min_length;
+	}
+	for (int a = 0; a < length; a++) {
+		result += utf8_from_code_points(rand() % 1112064);
+	}
+	//result = "💩";
 	return result;
 }
 
@@ -1774,10 +1813,10 @@ v<dataAction> parseQuery (std::string query) {
 						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::DATE;
 					}
 					if (token.compare("utf8") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::UTF8;
+						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::UTF8;
 					}
 					if (token.compare("timestamp") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIMESTAMP;
+						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::TIMESTAMP;
 					}
 					// ac.in.c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
 					//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
@@ -2048,10 +2087,10 @@ int main(int argc, const char** argv) {
 		var ret = validate_license();
 		if (ret == 0) {
 			// Bad
-			print("No license");
+			print_left("No license");
 				return 1;
 		}
-		console9log("Enter query");
+		print_left("Enter query");
 		std::getline(std::cin, q); 
 		if (q.compare("quit") == 0) {
 			break;
