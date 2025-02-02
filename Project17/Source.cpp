@@ -104,7 +104,16 @@ vs names = {
 	 "Laremy",
 	 "Gerald",
 	 "Maya",
-	 "Alex"
+	 "Alex",
+	 "Luis",
+	 "Arroyo",
+	 "Sam",
+	 "Hayley",
+	 "Pedro",
+	 "Art",
+	 "Jodi",
+	 "Olivia",
+	 "Alexis"
 	 
 };
 
@@ -113,7 +122,7 @@ vs regexes = {
 		 // "Credit Cards
 		 "\\b(?:\\d[ -]*?){13,16}\\b",
 				// eMAILS
-			"\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b",
+			"\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\\b",
 			"\\b(?:\\+?1[-.\\s]?)?\\(?\\d{3}\\)?[-.\\s]?\\d{3}[-.\\s]?\\d{4}\\b",
 			"\\b\\d{3}-\\d{2}-\\d{4}\\b",
 			"\\b(?:\\d{1,3}\\.){3}\\d{1,3}\\b",
@@ -381,10 +390,10 @@ std::string reverse_str(s in) {
 }
 
 void print_copyright() {
-#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; (b < 80 - a / 2); b ++) {std::cout << " "; }} std::cout << x << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; (b < 80 - a / 2); b++) {std::cout << " "; } }
-	s build_tag = "B-010-012925-2100";
+#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; b < (80 - a / 2); b ++) {std::cout << " "; }} std::cout << ANSI<<  x << << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; b < (80 - a / 2); b++) {std::cout << " "; } }
+	s build_tag = "B-010-020225-0500";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
-	print(copyright);
+	//print(copyright);
 
 }
 #define print(x) std::cout << x << std::endl;
@@ -398,16 +407,16 @@ std::string truncate_str(s in, size_t len) {
 	return in;
 }
 
-//#include <algorithm>
-//s tolo(s in) {
-//	std::transform(in.begin(), in.end(), in.begin(), tolower);
-//	return in;
-//}
-//
-//s tohi(s in) {
-//	std::transform(in.begin(), in.end(), in.begin(), toupper);
-//	return in;
-//}
+#include <algorithm>
+s tolo(s in) {
+	std::transform(in.begin(), in.end(), in.begin(), ::tolower);
+	return in;
+}
+
+s tohi(s in) {
+	std::transform(in.begin(), in.end(), in.begin(), ::toupper);
+	return in;
+}
 
 s replace(s in, s tis, s with) {
 	size_t occurences = 0;
@@ -444,6 +453,7 @@ s replaceFirst(s in, s tis, s with) {
 		for (var a = b + with.length(); a < in.length() + with.length(); a++) {
 			result += in.at(a);
 		}
+		return result;
 	}
 	else {
 		return in;
@@ -499,6 +509,12 @@ std::string generate_ccn(std::string sep) {
 
 std::string generate_number(int digits, int decimals) {
 	s result = "";
+	if (digits <= 0) {
+		digits = rand() % 10 + 1;
+	}
+	if (decimals < 0) {
+		decimals = rand() % 6;
+	}
 	for (var a = 0; a < digits; a++) {
 		result += std::to_string(rand() % 10);
 	}
@@ -865,13 +881,20 @@ std::string encrypt(s in) {
 	}
 	return result;
 }
+void report_err(s message);
 
 std::string get_data(std::string fileName) {
-	std::ifstream ifs(fileName);
-	std::string content((std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>()));
-	ifs.close();
-	return content;
+	try {
+		std::ifstream ifs(fileName);
+		std::string content((std::istreambuf_iterator<char>(ifs)),
+			(std::istreambuf_iterator<char>()));
+		ifs.close();
+		return content;
+	}
+	catch (...) {
+		report_err("Cannot open file " + fileName);
+		return "";
+	}
 }
 
 v<result> scan_name(s buffer, s source) {
@@ -1021,7 +1044,7 @@ void parseData(std::string data, dataAction action) {
 
 void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode) {
 	// Create and open a text file
-	if (fileName.compare("stdout") == 0) {
+	if (fileName.compare("stdout") == 0 || fileName.compare("sout") == 0) {
 			fprintf(stdout, "%s\n", data.c_str());
 	}
 	else
@@ -1038,7 +1061,9 @@ void handleOutput(std::string data, std::string fileName, std::ios_base::openmod
 }
 
 
-
+#include <thread>
+#include <chrono>
+#include <mutex>
 
 void handleGenerate(dataAction action) {
 	var a = 0;
@@ -1046,33 +1071,6 @@ void handleGenerate(dataAction action) {
 	if (action.out.c.size() > 0) {
 		for (; a < action.count; a++) {
 			for (var column : action.out.c) {
-				switch (column.gend)
-
-				{
-				case generateDataType::name:
-					record_string += names.at(rand() % names.size());
-					break;
-				case generateDataType::ssn:
-					record_string += generate_ssn();
-					break;
-				case generateDataType::email:
-					record_string += generate_email();
-					break;
-				case generateDataType::id:
-					record_string += std::to_string(a);
-					break;
-				default:
-					record_string += generate_asc_string(1, rand() % 50 + 1);
-					break;
-				}
-				record_string += action.out.separator;
-			}
-			record_string += "\n";
-		}
-	}
-	else if (action.in.c.size() > 0) {
-		for (; a < action.count; a++) {
-			for (var column : action.in.c) {
 				switch (column.gend)
 
 				{
@@ -1101,12 +1099,116 @@ void handleGenerate(dataAction action) {
 					//record_string += gener();
 					// gener
 				default:
-					record_string += generate_asc_string(1, rand() % 50 + 1);
+				{
+					switch (column.dt) {
+
+				case dataTypeType::NUMERIC: {
+					record_string += generate_number(column.size, column.prec);
+						break;
+					}
+
+				case dataTypeType::DATE: {
+					record_string += generate_date();
 					break;
 				}
+				case TIMESTAMP: {
+					record_string += generate_timestamp();
+					break;
+				}
+
+				case dataTypeType::UTF8: {
+					record_string += generate_utf8_string(1, rand() % 50);
+					break;
+				}
+				case dataTypeType::TIME: {
+					record_string += generate_time();
+					break;
+				}
+
+				default: {
+					break;
+				}
+				}
+				record_string += generate_asc_string(1, rand() % 50 + 1);
+				break;
+				}
+			}
 				record_string += action.out.separator;
 			}
 			record_string += "\n";
+		}
+	}
+	else if (action.in.c.size() > 0) {
+		for (; a < action.count; a++) {
+			for (; a < action.count; a++) {
+				for (var column : action.in.c) {
+					switch (column.gend)
+
+					{
+					case generateDataType::name:
+						record_string += names.at(rand() % names.size());
+						break;
+					case generateDataType::ssn:
+						record_string += generate_ssn();
+						break;
+					case generateDataType::email:
+						record_string += generate_email();
+						break;
+					case generateDataType::id:
+						record_string += std::to_string(a);
+						break;
+					case generateDataType::state:
+						record_string += states.at(rand() % states.size());
+						break;
+					case generateDataType::tool:
+						record_string += tools.at(rand() % tools.size());
+						break;
+					case generateDataType::country:
+						record_string += generate_country();
+						break;
+					case generateDataType::uuid:
+						//record_string += gener();
+						// gener
+					default:
+					{
+						switch (column.dt) {
+
+						case dataTypeType::NUMERIC: {
+							record_string += generate_number(column.size, column.prec);
+							break;
+						}
+
+						case dataTypeType::DATE: {
+							record_string += generate_date();
+							break;
+						}
+						case TIMESTAMP: {
+							record_string += generate_timestamp();
+							break;
+						}
+
+						case dataTypeType::UTF8: {
+							record_string += generate_utf8_string(1, rand() % 50);
+							break;
+						}
+						case dataTypeType::TIME: {
+							record_string += generate_time();
+							break;
+						}
+
+						default: {
+							record_string += generate_asc_string(1, rand() % 50 + 1);
+							break;
+						}
+						}
+						
+						break;
+					}
+					}
+					record_string += action.out.separator;
+				}
+				record_string += "\n";
+			}
 		}
 	}
 	if (record_string.size() > 0) {
@@ -1391,6 +1493,12 @@ v<string> tokenize(std::string query) {
 
  // #include "Header1.h"
 
+//int same(s one, s two) {
+//	size_t len1 = one.size();
+//	siez_t len2 = two.size();
+//	
+//	return 1;
+//}
 
 void h_web(s qu) {
 	/*httplib::Client cli("http://google.com?q=" + qu);
@@ -1411,8 +1519,12 @@ void make_me_a_sandwich();
 // Get  a hold on the data
 // Identify it
 // Qu is the source
-void handle_govern(s qu) {
-	get_data(qu);
+void handle_govern(s qu, dataAction action) {
+	var data = get_data(qu);
+	parseData(data, action);
+	// classify
+	// role
+
 }
 
 // Generate 10 names
@@ -1433,6 +1545,7 @@ v<dataAction> parseQuery (std::string query) {
 	// Idea: Leniency in token interpretation
 	// Idea: Handle tokens with spaces (surround with parens)
 	// 
+	start:
 	vs tokens = tokenize(query);
 	v<dataAction> actions;
 	dataAction ac;
@@ -1444,6 +1557,7 @@ v<dataAction> parseQuery (std::string query) {
 	int next_named_dt = 0;
 	int next_named_prec = 0;
 	int next_named_size = 0;
+	int next_named_execute = 0;
 	var token_number = 0;
 	if (tokens.size() <= 4) {
 		for (var token : tokens) {
@@ -1453,6 +1567,7 @@ v<dataAction> parseQuery (std::string query) {
 			}
 		}
 	}
+	
 	for (var token : tokens) {
 		token_number++;
 		if (next_name) {
@@ -1501,6 +1616,9 @@ v<dataAction> parseQuery (std::string query) {
 					ac.in.ftype = fileType::PPT;
 				}
 				else if (ac.input.compare("database") == 0) {
+					ac.in.ftype = fileType::DB;
+				}
+				else if (ac.input.compare("db") == 0) {
 					ac.in.ftype = fileType::DB;
 				}
 			}
@@ -1556,8 +1674,11 @@ v<dataAction> parseQuery (std::string query) {
 			next_name = 0;
 			continue;
 		}
+		if (next_named_execute) {
+			system(token.c_str());
+		}
 		if (next_named_column) {
-			if (ac.out.name.length() > 0) {
+			if (ac.out.c.size() > 0) {
 				column c;
 				c.position = ac.out.c.size() + 1;
 				c.name = token;
@@ -1589,16 +1710,78 @@ v<dataAction> parseQuery (std::string query) {
 				//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 			}
-			next_named_dt = 0;
+			next_named_prec = 0;
+		}
+
+		if (next_named_size) {
+			var size = ac.in.c.size();
+			if (size == 0) {
+				// Error need named_col
+				report_err("Precede size specification with a named column.");
+			}
+			else if (size > 0) {
+				if (ac.out.c.size() > 0) {
+					ac.out.c.at(ac.out.c.size() - 1).size = atoi(token.c_str());
+				}
+				else {
+					ac.in.c.at(ac.in.c.size() - 1).size = atoi(token.c_str());
+					//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
+				}
+			}
+			next_named_size = 0;
 		}
 		if (next_named_dt) {
 		//
+			//var size = ac.in.c.size();
+			//if (size == 0) {
+
+			//}
+			//else if (size > 0) {
+			//	//if (ac.out.)
+			//}
 			var size = ac.in.c.size();
 			if (size == 0) {
-
+				// Error need named_col
+				report_err("Precede data type specification with a named column.");
 			}
-			else if (size > 0) {
-				//if (ac.out.)
+			if (size > 0) {
+				if (ac.out.c.size() > 0) {
+					if (token.compare("numeric") == 0 || token.compare("num") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::NUMERIC;
+					}
+					else if (token.compare("time") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIME;
+					}
+					else if (token.compare("date") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::DATE;
+					}
+					if (token.compare("utf8") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::UTF8;
+					}
+					if (token.compare("timestamp") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIMESTAMP;
+					}
+					// = atoi(token.c_str());
+				}
+				else {
+					if (token.compare("numeric") == 0 || token.compare("num") == 0) {
+						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::NUMERIC;
+					}
+					else if (token.compare("time") == 0) {
+						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::TIME;
+					}
+					else if (token.compare("date") == 0) {
+						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::DATE;
+					}
+					if (token.compare("utf8") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::UTF8;
+					}
+					if (token.compare("timestamp") == 0) {
+						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIMESTAMP;
+					}
+					// ac.in.c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
+					//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
+				}
 			}
 			next_named_dt = 0;
 		}
@@ -1606,6 +1789,11 @@ v<dataAction> parseQuery (std::string query) {
 			
 			ac.type = dataActionType::mask;
 			
+		}
+		/*else if (token.compare("")) {
+		}*/
+		else if (token.compare("mascarilla") == 0) {
+			ac.type = dataActionType::mask;
 		}
 		else if (token.compare("named_column") == 0) {
 			next_named_column = 1;
@@ -1617,10 +1805,10 @@ v<dataAction> parseQuery (std::string query) {
 			next_named_dt = 1;
 		}
 		else if (token.compare("prec") == 0) {
-			next_named_prec = 0;
+			next_named_prec = 1;
 		}
 		else if (token.compare("size") == 0) {
-			 next_named_size = 0;
+			 next_named_size = 1;
 		}
 		else if (token.compare("col") == 0) {
 			next_named_column = 1;
@@ -1651,6 +1839,9 @@ v<dataAction> parseQuery (std::string query) {
 		}
 		else if (token.compare("convert") == 0) {
 			ac.type = dataActionType::convert;
+		}
+		else if (token.compare("execute") == 0) {
+			next_named_execute = 1;
 		}
 		else if (token.compare("conv") == 0) {
 			ac.type = dataActionType::convert;
@@ -1691,7 +1882,7 @@ v<dataAction> parseQuery (std::string query) {
 		}
 		else if (token.compare("govern") == 0) {
 			if (tokens.size() >= token_number + 2) {
-				handle_govern(tokens.at(token_number + 1));
+				handle_govern(tokens.at(token_number + 1), ac);
 			}
 			else {
 				std::cout << "Ensure a data source is specified to govern in query." << std::endl;
@@ -1714,6 +1905,15 @@ v<dataAction> parseQuery (std::string query) {
 			else {
 				ac.dd = generateDataType::name;
 			}
+		}
+		else if (token.compare("spec") == 0 || token.compare("specification") == 0) {
+			// Read specifications file for query 
+			if (tokens.size() < token_number + 1) {
+				report_err("Enter the path to a file following spec command");
+				return actions;
+			}
+			query = get_data(tokens.at(token_number + 1));
+			goto start;
 		}
 
 		else if (token.compare("ssn")== 0) {
@@ -1824,6 +2024,15 @@ int update_num_queries_used(std::string filename) {
 	}
 }
 
+// watch it
+void watch_f() {
+#ifdef _WIN32
+//#include <Windows.h>
+//#include <WinSock2.h>
+//	threa
+#endif
+}
+
 // Main execution
 int main(int argc, const char** argv) {
 
@@ -1833,6 +2042,7 @@ int main(int argc, const char** argv) {
 	print_copyright();
 #define pause system("wait");
 
+	// Querier
 	num_queries = get_num_queries_used("queries.txt.log");
 	do {
 		var ret = validate_license();
