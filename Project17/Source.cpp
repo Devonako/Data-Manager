@@ -832,7 +832,7 @@ std::string generate_email(std::vector<string> prefix, std:: string domain) {
 
 std::string generate_f_email() {
 	s email;
-	return generate_name() + "." + generate_name() + "example.com";
+	return generate_name() + "." + generate_name() + "@example.com";
 }
 
 std::string generate_email() {
@@ -840,7 +840,7 @@ std::string generate_email() {
 	vs domains = {
 		"gmail.com", "yahoo.com", "outlook.com", "hotmail.com"
 	};
-	return generate_name() + "." + generate_name() + domains.at(rand() % domains.size());
+	return generate_name() + "." + generate_name() + "@" + domains.at(rand() % domains.size());
 }
 
 std::string generate_ssn() {
@@ -1020,7 +1020,8 @@ void show_report(vr res) {
 	fprintf(f, "</table> </body></html>");
 	fclose(f);
 	// SHow in CHROME
-	system("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe report.html");
+
+	system("\"C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\" report.html");
 }
 
 
@@ -1112,7 +1113,7 @@ void handleGenerate(dataAction action) {
 		for (var column : action.out.c) {
 			record_string += column.name;
 			record_string += action.out.separator;
-			record_string += "\n";
+			//record_string += "\n";
 		}
 		if (action.out.c.size() > 0) {
 			record_string.pop_back();
@@ -1194,6 +1195,7 @@ void handleGenerate(dataAction action) {
 		}
 		if (action.in.c.size() > 0) {
 			record_string.pop_back();
+			record_string += "\n";
 		}
 		for (; a < action.count; a++) {
 			for (; a < action.count; a++) {
@@ -2013,6 +2015,18 @@ v<dataAction> parseQuery (std::string query) {
 			}
 			//ac.dd = generateDataType::email;
 		}
+		else if (token.compare("tool") == 0) {
+			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
+				ac.in.c.at(ac.in.c.size() - 1).gend = generateDataType::tool;
+			}
+			else if (ac.out.c.size() > 0) {
+				ac.out.c.at(ac.out.c.size() - 1).gend = generateDataType::tool;
+			}
+			else {
+				ac.dd = generateDataType::tool;
+			}
+			//ac.dd = generateDataType::email;
+			}
 
 		else if (token.compare("and") == 0) {
 			actions.push_back(ac);
