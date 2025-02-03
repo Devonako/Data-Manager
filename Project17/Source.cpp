@@ -1107,7 +1107,17 @@ void handleOutput(std::string data, std::string fileName, std::ios_base::openmod
 void handleGenerate(dataAction action) {
 	var a = 0;
 	std::string record_string;
+	
 	if (action.out.c.size() > 0) {
+		for (var column : action.out.c) {
+			record_string += column.name;
+			record_string += action.out.separator;
+			record_string += "\n";
+		}
+		if (action.out.c.size() > 0) {
+			record_string.pop_back();
+			record_string += "\n";
+		}
 		for (; a < action.count; a++) {
 			for (var column : action.out.c) {
 				switch (column.gend)
@@ -1178,6 +1188,13 @@ void handleGenerate(dataAction action) {
 		}
 	}
 	else if (action.in.c.size() > 0) {
+		for (var column : action.in.c) {
+			record_string += column.name;
+			record_string += action.in.separator;
+		}
+		if (action.in.c.size() > 0) {
+			record_string.pop_back();
+		}
 		for (; a < action.count; a++) {
 			for (; a < action.count; a++) {
 				for (var column : action.in.c) {
@@ -1433,6 +1450,13 @@ void handleReport(dataAction action) {
 	TODO map columns in to out
 	Any data type conversions, function applications
 	*/
+	/*for (var column : action.out.c) {
+		record_string += column.name;
+		record_string += action.out.separator;
+	}
+	if (action.out.c.size() > 0) {
+		record_string.pop_back();
+	}*/
 	handleOutput(content, action.output, std::ios::out);
 }
 void handleSort(dataAction action) {
@@ -1463,10 +1487,18 @@ void handleSort(dataAction action) {
 	}
 	
 	content = "";
+	for (var column : action.out.c) {
+		content += column.name;
+		content += action.out.separator;
+	}
+	if (action.out.c.size() > 0) {
+		content.pop_back();
+	}
 	for (var line : lines) {
 		content += line;
 		content += "\n";
 	}
+
 	handleOutput(content, action.output, std::ios::out);
 }
 
