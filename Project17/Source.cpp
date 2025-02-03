@@ -60,6 +60,27 @@ voi jameis() {
 #define vr v<r>
 #define var auto
 
+#include <stack>
+
+class argument {
+public: 
+	std::string value;
+	int type;
+};
+
+class function_stack {
+public:
+	std::stack<function> functions;
+
+};
+
+class function {
+public:
+	s name;
+	int type;
+	std::stack<argument> args;
+};
+
 vs names = {
 	"John",
 	"Mary",
@@ -315,6 +336,16 @@ class dataType {
 
 };
 
+vs functions{
+	"gen_email",
+	"redact",
+	"encrypt",
+	"pseudo",
+	"gen_ssn",
+	"sub_string"
+
+};
+
 class column {
 public:
 	std::string value;
@@ -326,7 +357,7 @@ public:
 	int size = -1;
 	int left_pad = -1;
 	int right_pad = 0;
-
+	function_stack f_stack;
 };
 
 class record {
@@ -369,6 +400,16 @@ public:
 		
 	}
 };
+
+s evaluate_stack(function_stack f_stack) {
+	vs vals;
+	s val;
+	while (!f_stack.functions.empty()) {
+		if (f_stack.functions.top().name.compare("gen_email")) {
+			vals.push_back(generate_email());
+		}
+	}
+}
 
 
 size_t contain(s in, s st) {
@@ -1709,7 +1750,7 @@ v<dataAction> parseQuery (std::string query) {
 				else if (get_extension(ac.output).compare("xml") == 0) {
 					ac.out.ftype = fileType::XML;
 				}
-				if (get_extension(ac.output).compare("json") == 0) {
+				else if (get_extension(ac.output).compare("json") == 0) {
 					ac.out.ftype = fileType::JSON;
 				}
 				else if (get_extension(ac.output).compare("yaml") == 0) {
@@ -1747,10 +1788,10 @@ v<dataAction> parseQuery (std::string query) {
 			next_name = 0;
 			continue;
 		}
-		if (next_named_execute) {
+		else if (next_named_execute) {
 			system(token.c_str());
 		}
-		if (next_named_column) {
+		else if (next_named_column) {
 			if (ac.out.c.size() > 0) {
 				column c;
 				c.position = ac.out.c.size() + 1;
@@ -1768,7 +1809,7 @@ v<dataAction> parseQuery (std::string query) {
 			}
 			next_named_column = 0;
 		}
-		if (next_named_prec) {
+		else if (next_named_prec) {
 			var size = ac.in.c.size();
 			if (size == 0) {
 				// Error need named_col
@@ -1786,7 +1827,7 @@ v<dataAction> parseQuery (std::string query) {
 			next_named_prec = 0;
 		}
 
-		if (next_named_size) {
+		else if (next_named_size) {
 			var size = ac.in.c.size();
 			if (size == 0) {
 				// Error need named_col
@@ -1803,7 +1844,7 @@ v<dataAction> parseQuery (std::string query) {
 			}
 			next_named_size = 0;
 		}
-		if (next_named_dt) {
+		else if (next_named_dt) {
 		//
 			//var size = ac.in.c.size();
 			//if (size == 0) {
@@ -1858,7 +1899,7 @@ v<dataAction> parseQuery (std::string query) {
 			}
 			next_named_dt = 0;
 		}
-		if (token.compare("mask") == 0) {
+		else if (token.compare("mask") == 0) {
 			
 			ac.type = dataActionType::mask;
 			
