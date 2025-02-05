@@ -642,3 +642,191 @@ Generate to stdout.
 Completed query generate to file stdout nc a dt ascii .... -> next!
 Generate to stdout.
 Completed query generate nc a to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a numeric to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a nc b to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Completed query  .... -> next!
+Generate to stdout.
+Completed query generate nc a to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Completed query  .... -> next!
+Completed query  .... -> next!
+Generate to stdout.
+Completed query generate nc a dt numeric to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt num to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt numeric to f stdout .... -> next!
+Completed query Hello .... -> next!
+Generate to stdout.
+Completed query generate nc a names to file stdout .... -> next!
+Generate to al.
+Completed query generate nc a names to file al .... -> next!
+Masked source al to output stdout.
+
+Completed query mask file al to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a names to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a dt utf8 to file stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a names to file stdout .... -> next!
+Generated name to file stdout.
+
+Completed query generate 20 names to f stdout .... -> next!
+Completed query generate 20 numbers to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a numeric to f stdout .... -> next!
+Generate to stdout.
+Completed query generate to f stdout nc a  .... -> next!
+Generate to stdout.
+Completed query generate to f stdout nc a numeric .... -> next!
+Completed query  .... -> next!
+Completed query  .... -> next!
+Completed query  .... -> next!
+Generate to stdout.
+Completed query generate to f stdout nc a numeric .... -> next!
+Generate to stdou.
+Completed query generate to f stdou nc a numeric .... -> next!
+Completed query sort f stdou nc a numeric to f stdout .... -> next!
+Completed query sort f stdou nc a numeric to f stdout .... -> next!
+Generated name to file stdout.
+
+Completed query generate 10 names to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a names to f stdout .... -> next!
+Generate to stdout.
+Completed query generate f aa nc a names to f stdout nc a names .... -> next!
+Generate to stdout.
+Completed query generate f aa nc a names to f stdout nc a names .... -> next!
+Generate to stdout.
+Completed query generate f aa nc a names to f stdout nc a names .... -> next!
+Generate to stdout.
+Completed query generate f aa nc a names to f stdout nc a names .... -> next!
+Generate to stdout.
+Completed query generate f aa nc a names to f stdout nc a names .... -> next!
+Generate to stdout.
+Completed query generate nc a names to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc a names to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names nc em email to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names nc em email nc too tool to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names nc em email nc too tool to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names nc em email nc too tool nc ss ssn to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nmes names nc em email nc too tool nc ssn ssn to f stdout .... -> next!
+Generate to stdo.
+Completed query generate nc nmes names nc em email nc too tool nc ssn ssn to f stdo and sort f stdo to f stdout .... -> next!
+Generate to stdo.
+Masked source stdo to output stdout.
+
+Completed query generate nc nmes names nc em email nc too tool nc ssn ssn to f stdo and sort f stdo to f st and mask st to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nme dt UTF8 nc em email to f stdout .... -> next!
+Generate to stdout.
+Completed query generate nc nme dt num nc em email to f stdout .... -> next!
+Generate to sout.
+Completed query generate nc a num to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num to f sout .... -> next!
+Generate to sou.
+Completed query generate nc a dt num to f sou .... -> next!
+Completed query numsort f sou to f sout .... -> next!
+Completed query report f sou to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num prec 0 to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num prec 0 size 3to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num prec 0 size 3 to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num prec 0 size 3 to f sout .... -> next!
+Generate to sout.
+Completed query generate nc a dt num prec 0 size 3 to f sout .... -> next!
+Completed query excute (gamble abc) .... -> next!
+Completed query excute {gamble abc} .... -> next!
+Completed query excute {gamble abc} .... -> next!
+Completed query execute {space_eater ./} .... -> next!
+Completed query execute {space_eater ./ 2 .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout .... -> next!
+Generated name to file sou.
+
+Completed query generate 10 names to f sou .... -> next!
+Completed query sort f sou to f sout .... -> next!
+Completed query report f sou to sout .... -> next!
+Completed query report f sou to f sout .... -> next!
+Generated name to file lou.
+
+Completed query generate 10 names to f lou .... -> next!
+Completed query report f lou to f sout .... -> next!
+Generated name to file .
+
+Completed query generate 10 names to a.xlsx .... -> next!
+Generated name to file a.xlsx.
+
+Completed query generate 10 names to f a.xlsx .... -> next!
+Completed query report f a.xlsx to f sout .... -> next!
+Generated name to file a.xlsx.
+
+Completed query generate 10 names to f a.xlsx .... -> next!
+Generated name to file a.xlsx.
+
+Completed query generate 10 names to f a.xlsx .... -> next!
+Generated name to file a.xlsx.
+
+Completed query generate 10 names to f a.xlsx .... -> next!
+Generated name to file a.xlsx.
+
+Completed query generate 10 names to f a.xlsx .... -> next!
+Generated name to file b.xlsx.
+
+Completed query generate 10 names to f b.xlsx .... -> next!
+Generated name to file .
+
+Completed query generate 10 names to b.xlsx .... -> next!
+Generated name to file b.xlsx.
+
+Completed query generate 10 names to f b.xlsx .... -> next!
+Generated name to file b.xlsx.
+
+Completed query generate 10 names to f b.xlsx .... -> next!
+Generated name to file b.xlsx.
+
+Completed query generate 10 names to f b.xlsx .... -> next!
+Generated name to file c.xlsx.
+
+Completed query generate 10 names to f c.xlsx .... -> next!

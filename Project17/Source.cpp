@@ -68,11 +68,7 @@ public:
 	int type;
 };
 
-class function_stack {
-public:
-	std::stack<function> functions;
 
-};
 
 class function {
 public:
@@ -80,6 +76,15 @@ public:
 	int type;
 	std::stack<argument> args;
 };
+
+class function_stack {
+public:
+	std::stack<function> functions;
+
+};
+
+
+
 
 vs names = {
 	"John",
@@ -175,7 +180,7 @@ vs regexes = {
 //	}
 //}
 
-
+std::string generate_email();
 class result {
 public:
 	 int start;
@@ -303,7 +308,31 @@ vs countries = {
 	"France",
 	"Zimbabwe",
 	"South Africa",
-	"Australia"
+	"Australia",
+	"Kenya",
+	"Columbia",
+	"Japan",
+	"Spain",
+	"Portugal",
+	"Israel",
+	"Kazakhstan",
+	"Uzbekistan",
+	"Albania",
+	"Algeria",
+	"Argentina",
+	"Bahrain",
+	"Barbados",
+	"Belarus",
+	"Cambodia",
+	"Croatia",
+	"Ecuador",
+	"Greece",
+	"Kenya",
+	"Mali",
+	"Malta",
+	"Nepal",
+	"Slovakia",
+	"Taiwan"
 };
 
 s generate_country() {
@@ -313,7 +342,7 @@ s generate_country() {
 
 enum dataActionType
 {
-	generate,convert, mask, sort, report, govern
+	generate,convert, mask, sort, report, govern, join, classify
 };
 
 enum generateDataType {
@@ -346,6 +375,10 @@ vs functions{
 
 };
 
+#include "C:\Users\Devon\source\repos\cosort\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\interfaces\c++\headers\OpenXLSX.h"
+
+// xl
+
 class column {
 public:
 	std::string value;
@@ -366,6 +399,10 @@ public:
 	int num;
 };
 
+class sort_key {
+	column c;
+};
+
 class datum {
 public:
 
@@ -373,7 +410,10 @@ public:
 	fileType ftype = fileType::CSV;
 	v<record> rec;
 	v<column> c;
+	v<sort_key> sort_keys;
 	int remove;
+	vs headers;
+	int append;
 	std::string separator = "\t";
 };
 
@@ -409,6 +449,7 @@ s evaluate_stack(function_stack f_stack) {
 			vals.push_back(generate_email());
 		}
 	}
+	return val;
 }
 
 
@@ -418,6 +459,26 @@ size_t contain(s in, s st) {
 	}
 	return false;*/
 	return in.find(st) != std::string::npos;
+}
+
+
+
+s apply_changes(column c) {
+	s value = c.value;
+	if (c.left_pad > 0) {
+		value = left_pad(value, ' ', 0, c.left_pad);
+	}
+	if (c.right_pad > 0) {
+		value = right_pad(value, ' ', 0, c.right_pad);
+	}
+	size_t len = value.size();
+	if (c.size < len) {
+
+	}
+	// c.dt
+	// c.size
+	// c.left_pad
+	return value;
 }
 
 std::string reverse_str(s in) {
@@ -1122,11 +1183,203 @@ void parseData(std::string data, dataAction action) {
 	}
 	
 }
+int parseReverse(char c);
+std::string bigparsefirst(int col);
+int parseReverse(char c);
+int bigparseReversestr(std::string c);
+std::string parsefirst(int i);
 
-void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode) {
+std::string bigparsefirst(int col) {
+	std::string b4;
+	std::string last;
+	std::string definitelyLast;
+	if (col > 702) {
+		b4 = parsefirst((col - 26) / 676);
+		if (col % 26 == 0) {
+			b4 = parsefirst((col - 27) / 676);
+		}
+	}
+	if (col > 26) {
+
+		last = parsefirst((col / 26) % 26);
+		if (col % 26 == 0) {
+			last = parsefirst((col - 1) / 26);
+		}
+		if (col % 703 > 676 && col % 703 < 703) {
+			last = "Z";
+		}
+		if (col > 702) {
+			int mult = bigparseReversestr(b4);
+			last = parsefirst(((((col - 26) - (676 * mult)) / 26)) + 1);
+			if (col % 26 == 0) {
+				last = parsefirst(((((col - 26) - (676 * mult)) / 26)));
+			}
+		}
+	}
+	definitelyLast = parsefirst(col % 26);
+	if (col % 26 == 0) {
+		definitelyLast = "Z";
+	}
+	std::string columnletters = b4 + last + definitelyLast;
+	return columnletters;
+}
+
+//reverse Parser; take column letter to integer
+int parseReverse(char c) {
+	int i = 0;
+	if ('A' <= c && 'Z' >= c) {
+		i = c - 'A' + 1;
+	}
+	return i;
+}
+
+int bigparseReversestr(std::string c) {
+	//int i = 0;
+	int start = 1;
+	int fincol = 1;
+	const char* conchar = c.c_str();
+	int len = strlen(conchar);
+	if (len == start) {
+		fincol = parseReverse(c[0]);
+	}
+	else if (len == 3) {
+		for (len; len >= start; len--) {
+			if (len == 1) {
+				fincol = fincol + parseReverse(c[2]);
+			}
+			if (len == 3) {
+				fincol += (676 * parseReverse(c[0]));
+			}
+			if (len == 2) {
+				fincol += (26 * parseReverse(c[1]));
+			}
+
+
+		}fincol--;
+	}
+	else if (len == 2) {
+		for (len; len >= start; len--) {
+			if (len == 1) {
+				fincol = fincol + parseReverse(c[1]);
+			}
+			if (len == 2) {
+				fincol += (26 * parseReverse(c[0]));
+			}
+		}
+		fincol--;
+	}
+	else {
+		return -1;
+	}
+	return fincol;
+}
+//reverse Parser; take column letters to integer
+int bigparseReverse(char* c) {
+	//int i = 0;
+	int start = 1;
+	int fincol = 1;
+	const char* conchar = c;
+	int len = strlen(conchar);
+	if (len == start) {
+		fincol = parseReverse(c[0]);
+	}
+	else if (len == 3) {
+		for (len; len >= start; len--) {
+			if (len == 1) {
+				fincol = fincol + parseReverse(c[2]);
+			}
+			if (len == 3) {
+				fincol += (676 * parseReverse(c[0]));
+			}
+			if (len == 2) {
+				fincol += (26 * parseReverse(c[1]));
+			}
+
+
+		}fincol--;
+	}
+	else if (len == 2) {
+		for (len; len >= start; len--) {
+			if (len == 1) {
+				fincol = fincol + parseReverse(c[1]);
+			}
+			if (len == 2) {
+				fincol += (26 * parseReverse(c[0]));
+			}
+		}
+		fincol--;
+	}
+	else {
+		return -1;
+	}
+	return fincol;
+
+}
+std::string parsefirst(int i) {
+	std::string str = "";
+
+	if (1 <= i && 26 >= i) {
+		char c = 'A' + i - 1;
+		str.assign(1, c);
+	}
+	return str;
+}
+
+s convert_col_num_to_letter(int num) {
+	return bigparsefirst(num);
+}
+
+int handle_yaml_out(dataAction dc) {
+//	dc.out.
+	return 0;
+}
+
+
+int handle_excel_out(s data,s  fileName, int count) {
+	FILE* f = fopen(fileName.c_str(), "rb");
+	if (f) {
+		fclose(f);
+		remove(fileName.c_str());
+	}
+	OpenXLSX::XLDocument xld;
+
+	xld.CreateDocument(fileName);
+	xld.OpenDocument(fileName);
+	vs lines = split(data, "\n");
+	int line_num = 0 + count;
+
+	for (var line : lines) {
+		line_num++;
+		var fields = split(line, "\t");
+		int field_num = 0;
+		for (var field : fields) {
+			field_num++;
+			s cell_str = convert_col_num_to_letter(field_num) + std::to_string(line_num);
+			xld.Workbook().Worksheet("Sheet1").Cell(cell_str).Value() = field;
+		}
+
+		xld.SetProperty(OpenXLSX::XLProperty::Application, "Devonian Enterprises Data Manager");
+		xld.SaveDocument();
+	}
+	try
+	{
+		xld.CloseDocument();
+	}
+	catch (const std::exception&)
+	{
+
+	}
+	return 0;
+}
+
+void handleOutput(std::string data, std::string fileName, std::ios_base::openmode mode, int count) {
 	// Create and open a text file
 	if (fileName.compare("stdout") == 0 || fileName.compare("sout") == 0) {
 			fprintf(stdout, "%s\n", data.c_str());
+	}
+	else if (get_extension(fileName).compare("xlsx") == 0) {
+	
+		handle_excel_out(data, fileName, count);
 	}
 	else
 	{
@@ -1312,31 +1565,37 @@ void handleGenerate(dataAction action) {
 	}
 	if (record_string.size() > 0) {
 		
-		handleOutput(record_string, action.output, ios::app);
+		handleOutput(record_string, action.output, ios::app, 0);
 		logg.log_it("Generate to " + action.output + ".");
 		//print("Gen -d")
 		// Log
 	}
 	// Os this
+	// this is stub
 	if (action.dd == generateDataType::name) {
+		s data;
 		for (; a < action.count; a++) {
 			
-			handleOutput(names.at(rand() % names.size()), action.output, ios::app);
+			data += names.at(rand() % names.size());
 			
-
+			data += "\n";
 		}
+		handleOutput(data, action.output, ios::app, 0);
 		// log
-		handleOutput("Generated name to file " + action.output + ".\n", "log.txt", std::ios::app);
+		handleOutput("Generated name to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
 	}
 	if (action.dd == generateDataType::ssn ) {
+		s data;
 		for (; a < action.count; a++) {
-
-			handleOutput(generate_ssn(), action.output, std::ios::app);
+			data += 
+			data += "\n";
+		
 
 
 		}
+		handleOutput(generate_ssn(), action.output, std::ios::app, a);
 		// log
-		handleOutput("Generated ssn to file " + action.output + ".\n", "log.txt", std::ios::app);
+		handleOutput("Generated ssn to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
 	}
 }
 
@@ -1368,9 +1627,9 @@ void handleMask(dataAction action) {
 	for (var result : results) {
 		data = redact(data, result.start, result.end);
 	}
-	handleOutput(data, action.output, std::ios::out);
+	handleOutput(data, action.output, std::ios::out, 0);
 	//redact()
-	handleOutput("Masked source " + action.input + " to output " + action.output + ".\n", "log.txt", std::ios::app);
+	handleOutput("Masked source " + action.input + " to output " + action.output + ".\n", "log.txt", std::ios::app, 0);
 	show_report(results);
 // Make gth
 }
@@ -1481,7 +1740,7 @@ void handleConvert(dataAction action) {
 			output += liner;
 		}
 	}
-	handleOutput(output, action.output, std::ios::out);
+	handleOutput(output, action.output, std::ios::out, 0);
 }
 
 void handleReport(dataAction action) {
@@ -1500,7 +1759,7 @@ void handleReport(dataAction action) {
 	if (action.out.c.size() > 0) {
 		record_string.pop_back();
 	}*/
-	handleOutput(content, action.output, std::ios::out);
+	handleOutput(content, action.output, std::ios::out, 0);
 }
 void handleSort(dataAction action) {
 	// TODO sorting options
@@ -1509,6 +1768,7 @@ void handleSort(dataAction action) {
 	std::string content((std::istreambuf_iterator<char>(ifs)),
 		(std::istreambuf_iterator<char>()));
 	ifs.close();
+	
 	var lines = split(content, "\n");
 	switch (action.sort_options.type)
 	{
@@ -1542,7 +1802,7 @@ void handleSort(dataAction action) {
 		content += "\n";
 	}
 
-	handleOutput(content, action.output, std::ios::out);
+	handleOutput(content, action.output, std::ios::out, 0);
 }
 
 

@@ -90,6 +90,8 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\Devon\source\repos\cosort\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\pugixml;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\zippy;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\implementation\headers;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\interfaces\c++\headers;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -120,6 +122,8 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\Devon\source\repos\cosort\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\pugixml;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\zippy;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\implementation\headers;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\interfaces\c++\headers;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,6 +165,11 @@
     <ClInclude Include="Header1.h" />
     <ClInclude Include="Source.h" />
     <ClInclude Include="util.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\cosort\msdev\OpenXLSXLib\OpenXLSXLib.vcxproj">
+      <Project>{601a4d28-eccc-4b05-862d-6cc61cee20e7}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
