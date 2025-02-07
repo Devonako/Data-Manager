@@ -830,3 +830,31 @@ Completed query generate 10 names to f b.xlsx .... -> next!
 Generated name to file c.xlsx.
 
 Completed query generate 10 names to f c.xlsx .... -> next!
+Completed query aa .... -> next!
+Completed query a .... -> next!
+Completed query a .... -> next!
+Completed query aa .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout f sout .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout .... -> next!
+Generated name to file sout.
+
+Completed query generate 10 names to f sout f sout .... -> next!
+Generated ssn to file sout.
+
+Completed query generate 10 ssn to f sout .... -> next!
+Generated ssn to file s.xlsx.
+
+Completed query generate 10 ssn to f s.xlsx .... -> next!
+Generated ssn to file t.xlsx.
+
+Completed query generate 10 ssn to f t.xlsx .... -> next!

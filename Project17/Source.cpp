@@ -400,6 +400,7 @@ public:
 };
 
 class sort_key {
+public:
 	column c;
 };
 
@@ -425,8 +426,8 @@ public:
 	fileType ftype = fileType::CSV;
 	std::string input = "stdin";
 	std::string output = "stdout";
-	datum in;
-	datum out;
+	v<datum> in;
+	v<datum> out;
 	sortOptions sort_options;
 };
 
@@ -461,19 +462,21 @@ size_t contain(s in, s st) {
 	return in.find(st) != std::string::npos;
 }
 
-
+std::string truncate_str(s in, size_t len);
 
 s apply_changes(column c) {
 	s value = c.value;
+	value = evaluate_stack(c.f_stack);
 	if (c.left_pad > 0) {
 		value = left_pad(value, ' ', 0, c.left_pad);
 	}
 	if (c.right_pad > 0) {
 		value = right_pad(value, ' ', 0, c.right_pad);
 	}
+	
 	size_t len = value.size();
 	if (c.size < len) {
-
+		value = truncate_str(value, len);
 	}
 	// c.dt
 	// c.size
@@ -495,10 +498,14 @@ std::string reverse_str(s in) {
 
 void print_copyright() {
 	// s (80 - s.size()) / 2
-#define print(x) var a = x.size(); if ( a < 80) { for (var b = 0; b < ((80 - a) / 2)); b ++) {std::cout << " "; }} std::cout << ANSI_COLOR_RED ANSI_COLOR_UNDERLINE <<  x << ANSI_COLOR_RESET << std::endl; a = x.size(); if ( a < 80) {for (var b = 0; b < (80 - a) / 2); b++) {std::cout << " "; } }
-	s build_tag = "B-010-020225-0500";
+#define print(x) var a = x.size(); if ( a < 79) { for (var b = 0; b < ((80 - a) / 2); b ++) {std::cout << " "; }} std::cout << ANSI_COLOR_RED ANSI_COLOR_UNDERLINE <<  x << ANSI_COLOR_RESET; a = x.size(); if ( a < 80) {for (var b = 0; b < (80 - a) / 2; b++) {std::cout << " "; } } std::cout << std::endl;
+	s build_tag = "B-010-020425-2100";
 	s copyright = build_tag + " Copyright 2024-2025 Devonian Enterprises";
-	//print(copyright);
+	auto a = copyright.size(); if (a < 79) {
+		for (auto b = 0; b < (80 - a); b++) {std::cout << " "; }
+	} std::cout << "\x1b[31m" "\x1b[4m" << copyright << "\x1b[0m"; a = copyright.size(); if (a < 80) {
+		for (auto b = 0; b < (80 - a) / 2; b++) { std::cout << " "; } std::cout << std::endl;
+	};
 
 }
 #define print_left(x) std::cout << x << std::endl;
@@ -564,8 +571,43 @@ s replaceFirst(s in, s tis, s with) {
 		return in;
 	}
 	
+	
 }
 
+int binarySearch(vs values, int start, int end, s value) {
+	if (end >= start) {
+		int mid = start + (end - start) / 2;
+
+		// If the element is present at the middle
+		// itself
+		if (strcmp(values.at(mid).c_str(), value.c_str()) == 0) {
+			return mid;
+		}
+		// If element is smaller than mid, then
+		// it can only be present in left subarray
+		if (strcmp(values.at(mid).c_str(), value.c_str()) > 0) {
+			return binarySearch(values, start, mid - 1, value);
+		}
+		// Else the element can only be present
+		// in right subarray
+		return binarySearch(values, mid + 1, end, value);
+	}
+
+	// This is reached when the value is not
+	// present in the array of values.
+	return -1;
+}
+
+
+s pseudo(vs lookups, vs replacements, s lookup_val, s def) {
+	int ret = binarySearch(lookups, 0, lookups.size(), lookup_val);
+	if (ret == -1) {
+		return def;
+	}
+	else {
+		return replacements.at(ret);
+	}
+}
 
 int compare_char(char one, char two) {
 	v<char> ones = { 'a', 'b' };
@@ -1010,7 +1052,8 @@ s generate_city () {
 		"Edmonton",
 		"Fairbanks",
 		"La Paz",
-		"Kota"
+		"Kota",
+		"Sarasota"
 };
 	return cities.at(rand() % cities.size());
 }
@@ -1133,53 +1176,55 @@ void show_report(vr res) {
 
 // From data parse headers based on file type
 void parseData(std::string data, dataAction action) {
-	switch (action.in.ftype)
-	{
-	case CSV: {
-		vs splitt1 = split(data, "\n");
-		vs splitt = split(splitt1.at(0), ",");
-		// Split
-		int x = 0;
-		for (var header : splitt) {
-			action.in.c.at(x++).name = header;
+	for (var inn : action.in) {
+		switch (inn.ftype)
+		{
+		case CSV: {
+			vs splitt1 = split(data, "\n");
+			vs splitt = split(splitt1.at(0), ",");
+			// Split
+			int x = 0;
+			for (var header : splitt) {
+				inn.c.at(x++).name = header;
+			}
+			break;
 		}
-		break;
-	}
-	case PSV: {
-		vs splitt1 = split(data, "\n");
-		vs splitt = split(splitt1.at(0), "|");
-		// Split
-		int x = 0;
-		for (var header : splitt) {
-			action.in.c.at(x++).name = header;
+		case PSV: {
+			vs splitt1 = split(data, "\n");
+			vs splitt = split(splitt1.at(0), "|");
+			// Split
+			int x = 0;
+			for (var header : splitt) {
+				inn.c.at(x++).name = header;
+			}
+			break;
 		}
-		break;
-	}
-	case TSV: {
-		vs splitt1 = split(data, "\n");
-		vs splitt = split(splitt1.at(0), ",");
-		// Split
-		int x = 0;
-		for (var header : splitt) {
-			action.in.c.at(x++).name = header;
+		case TSV: {
+			vs splitt1 = split(data, "\n");
+			vs splitt = split(splitt1.at(0), ",");
+			// Split
+			int x = 0;
+			for (var header : splitt) {
+				inn.c.at(x++).name = header;
+			}
+			break;
 		}
-		break;
-	}
-	case YAML:
-	{
-		vs splitt = split(data, ":");
-		int x = 0;
-		for (var header : splitt) {
-			action.in.c.at(x++).name = header;
+		case YAML:
+		{
+			vs splitt = split(data, ":");
+			int x = 0;
+			for (var header : splitt) {
+				inn.c.at(x++).name = header;
+			}
+			break;
 		}
-		break;
-	}
-	case XML:
-	{
+		case XML:
+		{
 
-	}
-	default:
-		break;
+		}
+		default:
+			break;
+		}
 	}
 	
 }
@@ -1402,98 +1447,19 @@ void handleOutput(std::string data, std::string fileName, std::ios_base::openmod
 void handleGenerate(dataAction action) {
 	var a = 0;
 	std::string record_string;
-	
-	if (action.out.c.size() > 0) {
-		for (var column : action.out.c) {
-			record_string += column.name;
-			record_string += action.out.separator;
-			//record_string += "\n";
-		}
-		if (action.out.c.size() > 0) {
-			record_string.pop_back();
-			record_string += "\n";
-		}
-		for (; a < action.count; a++) {
-			for (var column : action.out.c) {
-				switch (column.gend)
-
-				{
-				case generateDataType::name:
-					record_string += names.at(rand() % names.size());
-					break;
-				case generateDataType::ssn:
-					record_string += generate_ssn();
-					break;
-				case generateDataType::email:
-					record_string += generate_email();
-					break;
-				case generateDataType::id:
-					record_string += std::to_string(a);
-					break;
-				case generateDataType::state:
-					record_string += states.at(rand() % states.size());
-					break;
-				case generateDataType::tool:
-					record_string += tools.at(rand() % tools.size());
-					break;
-				case generateDataType::country:
-					record_string += generate_country();
-					break;
-				case generateDataType::uuid:
-					//record_string += gener();
-					// gener
-				default:
-				{
-					switch (column.dt) {
-
-				case dataTypeType::NUMERIC: {
-					record_string += generate_number(column.size, column.prec);
-						break;
-					}
-
-				case dataTypeType::DATE: {
-					record_string += generate_date();
-					break;
-				}
-				case TIMESTAMP: {
-					record_string += generate_timestamp();
-					break;
-				}
-
-				case dataTypeType::UTF8: {
-					record_string += generate_utf8_string(1, rand() % 50);
-					break;
-				}
-				case dataTypeType::TIME: {
-					record_string += generate_time();
-					break;
-				}
-
-				default: {
-					break;
-				}
-				}
-				record_string += generate_asc_string(1, rand() % 50 + 1);
-				break;
-				}
+	for (var outt : action.out) {
+		if (outt.c.size() > 0) {
+			for (var column : outt.c) {
+				record_string += column.name;
+				record_string += outt.separator;
+				//record_string += "\n";
 			}
-				record_string += action.out.separator;
+			if (outt.c.size() > 0) {
+				record_string.pop_back();
+				record_string += "\n";
 			}
-			record_string += "\n";
-		}
-	}
-	else if (action.in.c.size() > 0) {
-		for (var column : action.in.c) {
-			record_string += column.name;
-			record_string += action.in.separator;
-		}
-		if (action.in.c.size() > 0) {
-			record_string.pop_back();
-			record_string += "\n";
-		}
-		for (; a < action.count; a++) {
 			for (; a < action.count; a++) {
-				for (var column : action.in.c) {
+				for (var column : outt.c) {
 					switch (column.gend)
 
 					{
@@ -1549,54 +1515,146 @@ void handleGenerate(dataAction action) {
 						}
 
 						default: {
-							record_string += generate_asc_string(1, rand() % 50 + 1);
 							break;
 						}
 						}
-						
+						record_string += generate_asc_string(1, rand() % 50 + 1);
 						break;
 					}
 					}
-					record_string += action.out.separator;
+					record_string += outt.separator;
 				}
 				record_string += "\n";
 			}
 		}
-	}
-	if (record_string.size() > 0) {
-		
-		handleOutput(record_string, action.output, ios::app, 0);
-		logg.log_it("Generate to " + action.output + ".");
-		//print("Gen -d")
-		// Log
-	}
-	// Os this
-	// this is stub
-	if (action.dd == generateDataType::name) {
-		s data;
-		for (; a < action.count; a++) {
-			
-			data += names.at(rand() % names.size());
-			
-			data += "\n";
+		if (record_string.size() > 0) {
+
+			handleOutput(record_string, action.out.at(action.out.size() - 1).name, ios::app, 0);
+			logg.log_it("Generate to " + action.out.at(action.out.size() - 1).name + ".");
+			//print("Gen -d")
+			// Log
+			record_string = "";
 		}
-		handleOutput(data, action.output, ios::app, 0);
-		// log
-		handleOutput("Generated name to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
-	}
-	if (action.dd == generateDataType::ssn ) {
-		s data;
-		for (; a < action.count; a++) {
-			data += 
-			data += "\n";
+		}
+		if (action.in.size() > 0 && action.in.at(0).c.size() > 0 && action.out.size() == 0) {
+			for (var inn : action.in) {
+				for (var column : inn.c) {
+					record_string += column.name;
+					record_string += inn.separator;
+				}
+				if (action.in.at(0).c.size() > 0) {
+					record_string.pop_back();
+					record_string += "\n";
+				}
+					for (; a < action.count; a++) {
+						for (var column : inn.c) {
+							switch (column.gend)
+
+							{
+							case generateDataType::name:
+								record_string += names.at(rand() % names.size());
+								break;
+							case generateDataType::ssn:
+								record_string += generate_ssn();
+								break;
+							case generateDataType::email:
+								record_string += generate_email();
+								break;
+							case generateDataType::id:
+								record_string += std::to_string(a);
+								break;
+							case generateDataType::state:
+								record_string += states.at(rand() % states.size());
+								break;
+							case generateDataType::tool:
+								record_string += tools.at(rand() % tools.size());
+								break;
+							case generateDataType::country:
+								record_string += generate_country();
+								break;
+							case generateDataType::uuid:
+								//record_string += gener();
+								// gener
+							default:
+							{
+								switch (column.dt) {
+
+								case dataTypeType::NUMERIC: {
+									record_string += generate_number(column.size, column.prec);
+									break;
+								}
+
+								case dataTypeType::DATE: {
+									record_string += generate_date();
+									break;
+								}
+								case TIMESTAMP: {
+									record_string += generate_timestamp();
+									break;
+								}
+
+								case dataTypeType::UTF8: {
+									record_string += generate_utf8_string(1, rand() % 50);
+									break;
+								}
+								case dataTypeType::TIME: {
+									record_string += generate_time();
+									break;
+								}
+
+								default: {
+									record_string += generate_asc_string(1, rand() % 50 + 1);
+									break;
+								}
+								}
+
+								break;
+							}
+							}
+							record_string += action.out.at(action.out.size() - 1).separator;
+						}
+						record_string += "\n";
+					
+				}
+				if (record_string.size() > 0) {
+
+					handleOutput(record_string, action.out.at(action.out.size() - 1).name, ios::app, 0);
+					logg.log_it("Generate to " + action.out.at(action.out.size() - 1).name + ".");
+					//print("Gen -d")
+					// Log
+					record_string = "";
+				}
+			}
+		}
 		
+		// Os this
+		// this is stub
+		if (action.dd == generateDataType::name) {
+			s data;
+			for (; a < action.count; a++) {
+
+				data += names.at(rand() % names.size());
+
+				data += "\n";
+			}
+			handleOutput(data, action.output, ios::app, 0);
+			// log
+			handleOutput("Generated name to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
+		}
+		if (action.dd == generateDataType::ssn) {
+			s data;
+			for (; a < action.count; a++) {
+				data += generate_ssn();
+					data += "\n";
 
 
+
+			}
+			handleOutput(data, action.output, std::ios::app, 0);
+			// log
+			handleOutput("Generated ssn to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
 		}
-		handleOutput(generate_ssn(), action.output, std::ios::app, a);
-		// log
-		handleOutput("Generated ssn to file " + action.output + ".\n", "log.txt", std::ios::app, 0);
-	}
+	
 }
 
 s replace_with(s input, s replacement, size_t start, size_t end) {
@@ -1634,33 +1692,43 @@ void handleMask(dataAction action) {
 // Make gth
 }
 
+column find_sort_key(s name, dataAction dc) {
+	for (var outt : dc.out) {
+		for (var col : outt.c) {
+			if (col.name.compare("name") == 0) {
+				return col;
+			}
+		}
+	}
+}
+
 // CSV
 // name, ssn
 // JSON
 // {"name": "John", "ssn": "444-44-4444"}
-std::string convert_line(dataAction action, std::string in) {
+std::string convert_line(datum in_d, datum out_d, std::string in) {
 	s out = "";
-	if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::JSON) {
+	if (in_d.ftype == fileType::CSV && out_d.ftype == fileType::JSON) {
 		vs res = split(in, ",");
 		size_t index = 0;
 		out += "{";
 		for (var ent : res) {
-			out = out + "\"" + ((action.out.c.size() > 0) ? action.out.c.at(index).name : "Placeholder") + "\": \"" + (action.out.c.size() > index ? action.out.c.at(index).value : ent) + "\",";
+			out = out + "\"" + ((out_d.c.size() > 0) ? out_d.c.at(index).name : "Placeholder") + "\": \"" + (out_d.c.size() > index ? out_d.c.at(index).value : ent) + "\",";
 			index += 1;
 		}
 		out += "},";
 	}
-	else if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::XML) {
+	else if (in_d.ftype == fileType::CSV && out_d.ftype == fileType::XML) {
 		vs res = split(in, ",");
 		size_t index = 0;
 		out += "<";
 		for (var ent : res) {
-			out = out + "\"" + (action.out.c.size() > index ? action.out.c.at(index).name : "Placeholder") + "\">" + action.out.c.at(index).value + "</" + (action.out.c.size() > index ? action.out.c.at(index).name : ent) + ">\n";
+			out = out + "\"" + (out_d.c.size() > index ? out_d.c.at(index).name : "Placeholder") + "\">" + out_d.c.at(index).value + "</" + (out_d.c.size() > index ? out_d.c.at(index).name : ent) + ">\n";
 			index += 1;
 		}
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::TSV) {
+	else if (in_d.ftype == fileType::CSV && out_d.ftype == fileType::TSV) {
 		vs res = split(in, ",");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1669,7 +1737,7 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::CSV && action.out.ftype == fileType::PSV) {
+	else if (in_d.ftype == fileType::CSV && out_d.ftype == fileType::PSV) {
 		vs res = split(in, ",");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1678,7 +1746,7 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::PSV && action.out.ftype == fileType::TSV) {
+	else if (in_d.ftype == fileType::PSV && out_d.ftype == fileType::TSV) {
 		vs res = split(in, "|");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1687,7 +1755,7 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::PSV && action.out.ftype == fileType::CSV) {
+	else if (in_d.ftype == fileType::PSV && out_d.ftype == fileType::CSV) {
 		vs res = split(in, "|");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1696,7 +1764,7 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::TSV && action.out.ftype == fileType::CSV) {
+	else if (in_d.ftype == fileType::TSV && out_d.ftype == fileType::CSV) {
 		vs res = split(in, "\t");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1705,7 +1773,7 @@ std::string convert_line(dataAction action, std::string in) {
 		out.pop_back();
 		//out += "},";
 	}
-	else if (action.in.ftype == fileType::TSV && action.out.ftype == fileType::PSV) {
+	else if (in_d.ftype == fileType::TSV && out_d.ftype == fileType::PSV) {
 		vs res = split(in, "\t");
 		size_t index = 0;
 		for (var ent : res) {
@@ -1717,30 +1785,36 @@ std::string convert_line(dataAction action, std::string in) {
 	
 	return out;
 }
+s get_buff();
 
 void handleConvert(dataAction action) {
-	std::ifstream ifs(action.input);
-	std::string content((std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>()));
-	ifs.close();
-	vs res = split(content, "\n");
-	size_t size = res.size();
-	size_t line_n = 0;
-	s output = "";
-	for (var line : res) {
-		line_n += 1;
-		var liner = convert_line(action, line);
-		if (line_n == res.size()) {
-			if (action.out.ftype == fileType::JSON) {
-				liner.pop_back();
-				output += liner;
+	for (var inn : action.in) {
+
+		std::ifstream ifs(inn.name);
+		std::string content((std::istreambuf_iterator<char>(ifs)),
+			(std::istreambuf_iterator<char>()));
+		ifs.close();
+		vs res = split(content, "\n");
+		size_t size = res.size();
+		size_t line_n = 0;
+		s output = "";
+		for (var outt : action.out) {
+			for (var line : res) {
+				line_n += 1;
+				var liner = convert_line(inn, outt, line);
+				if (line_n == res.size()) {
+					if (outt.ftype == fileType::JSON) {
+						liner.pop_back();
+						output += liner;
+					}
+				}
+				else {
+					output += liner;
+				}
 			}
-		}
-		else {
-			output += liner;
+			handleOutput(output, action.output, std::ios::out, 0);
 		}
 	}
-	handleOutput(output, action.output, std::ios::out, 0);
 }
 
 void handleReport(dataAction action) {
@@ -1764,6 +1838,25 @@ void handleReport(dataAction action) {
 void handleSort(dataAction action) {
 	// TODO sorting options
 	// Memory, speed, type of sort and keys
+
+	// For in in ins
+	// get data
+	// // sort based on column keys
+	// for out in outs
+	// out
+	//for (var inn : action.in) {
+	//	// get data
+	//	var data = get_data(inn.name);
+	//	var lines = split(data, "\n");
+	//	for (var col : inn.c) {
+	//		if (col.dt == dataTypeType::NUMERIC) {
+
+	//		}
+	//		else {
+
+	//		}
+	//	}
+	//}
 	std::ifstream ifs(action.input);
 	std::string content((std::istreambuf_iterator<char>(ifs)),
 		(std::istreambuf_iterator<char>()));
@@ -1790,11 +1883,11 @@ void handleSort(dataAction action) {
 	}
 	
 	content = "";
-	for (var column : action.out.c) {
+	for (var column : action.out.at(action.out.size() - 1).c) {
 		content += column.name;
-		content += action.out.separator;
+		content += action.out.at(action.out.size() - 1).separator;
 	}
-	if (action.out.c.size() > 0) {
+	if (action.out.at(action.out.size() - 1).c.size() > 0) {
 		content.pop_back();
 	}
 	for (var line : lines) {
@@ -1932,6 +2025,7 @@ v<dataAction> parseQuery (std::string query) {
 	int next_named_prec = 0;
 	int next_named_size = 0;
 	int next_named_execute = 0;
+	int next_named_key = 0;
 	var token_number = 0;
 	if (tokens.size() <= 4) {
 		for (var token : tokens) {
@@ -1947,103 +2041,110 @@ v<dataAction> parseQuery (std::string query) {
 		if (next_name) {
 			if (ac.input.empty() && ac.type != dataActionType::generate) {
 				ac.input = token;
+				datum in;
+				in.name = token;
+				
 				if (get_extension(ac.input).compare("csv") == 0) {
-					ac.in.ftype = fileType::CSV;
+					in.ftype = fileType::CSV;
 				}
 				else if (get_extension(ac.output).compare("psv") == 0) {
-					ac.out.ftype = fileType::PSV;
+					in.ftype = fileType::PSV;
 				}
 				else if (get_extension(ac.output).compare("tsv") == 0) {
-					ac.out.ftype = fileType::TSV;
+					in.ftype = fileType::TSV;
 				}
 				else if (get_extension(ac.input).compare("xml") == 0) {
-					ac.in.ftype = fileType::XML;
+					in.ftype = fileType::XML;
 				}
 				else if (get_extension(ac.input).compare("json") == 0) {
-					ac.in.ftype = fileType::JSON;
+					in.ftype = fileType::JSON;
 				}
 				else if (get_extension(ac.input).compare("yaml") == 0) {
-					ac.in.ftype = fileType::YAML;
+					in.ftype = fileType::YAML;
 				}
 				else if (get_extension(ac.input).compare("pdf") == 0) {
-					ac.in.ftype = fileType::PDF;
+					in.ftype = fileType::PDF;
 				}
 				else if (get_extension(ac.input).compare("dcm") == 0) {
-					ac.in.ftype = fileType::DCM;
+					in.ftype = fileType::DCM;
 				}
 				else if (get_extension(ac.input).compare("docx") == 0) {
-					ac.in.ftype = fileType::DOCX;
+					in.ftype = fileType::DOCX;
 				}
 				else if (get_extension(ac.input).compare("xlsx") == 0) {
-					ac.in.ftype = fileType::XLSX;
+					in.ftype = fileType::XLSX;
 				}
 				else if (get_extension(ac.input).compare("pptx") == 0) {
-					ac.in.ftype = fileType::PPTX;
+					in.ftype = fileType::PPTX;
 				}
 				else if (get_extension(ac.input).compare("jpg") == 0) {
-					ac.in.ftype = fileType::JPG;
+					in.ftype = fileType::JPG;
 				}
 				else if (get_extension(ac.input).compare("doc") == 0) {
-					ac.in.ftype = fileType::DOC;
+					in.ftype = fileType::DOC;
 				}
 				else if (get_extension(ac.input).compare("ppt") == 0) {
-					ac.in.ftype = fileType::PPT;
+					in.ftype = fileType::PPT;
 				}
 				else if (ac.input.compare("database") == 0) {
-					ac.in.ftype = fileType::DB;
+					in.ftype = fileType::DB;
 				}
 				else if (ac.input.compare("db") == 0) {
-					ac.in.ftype = fileType::DB;
+					in.ftype = fileType::DB;
 				}
+				ac.in.push_back(in);
 			}
 			else {
 				ac.output = token;
+				datum out;
+				out.name = token;
 				if (get_extension(ac.output).compare("csv") == 0) {
-					ac.out.ftype = fileType::CSV;
+					out.ftype = fileType::CSV;
 				}
 				else if (get_extension(ac.output).compare("psv") == 0) {
-					ac.out.ftype = fileType::PSV;
+					out.ftype = fileType::PSV;
 				}
 				else if (get_extension(ac.output).compare("tsv") == 0) {
-					ac.out.ftype = fileType::TSV;
+					out.ftype = fileType::TSV;
 				}
 				else if (get_extension(ac.output).compare("xml") == 0) {
-					ac.out.ftype = fileType::XML;
+					out.ftype = fileType::XML;
 				}
 				else if (get_extension(ac.output).compare("json") == 0) {
-					ac.out.ftype = fileType::JSON;
+					out.ftype = fileType::JSON;
 				}
 				else if (get_extension(ac.output).compare("yaml") == 0) {
-					ac.out.ftype = fileType::YAML;
+					out.ftype = fileType::YAML;
 				}
 				else if (get_extension(ac.output).compare("pdf") == 0) {
-					ac.out.ftype = fileType::PDF;
+					out.ftype = fileType::PDF;
 				}
 				else if (get_extension(ac.output).compare("dcm") == 0) {
-					ac.out.ftype = fileType::DCM;
+					out.ftype = fileType::DCM;
 				}
 				else if (get_extension(ac.output).compare("docx") == 0) {
-					ac.out.ftype = fileType::DOCX;
+					out.ftype = fileType::DOCX;
 				}
 				else if (get_extension(ac.output).compare("xlsx") == 0) {
-					ac.out.ftype = fileType::XLSX;
+					out.ftype = fileType::XLSX;
 				}
 				else if (get_extension(ac.output).compare("pptx") == 0) {
-					ac.out.ftype = fileType::PPTX;
+					out.ftype = fileType::PPTX;
 				}
 				else if (get_extension(ac.output).compare("jpg") == 0) {
-					ac.out.ftype = fileType::JPG;
+					out.ftype = fileType::JPG;
 				}
 				else if (get_extension(ac.output).compare("doc") == 0) {
-					ac.out.ftype = fileType::DOC;
+					out.ftype = fileType::DOC;
 				}
 				else if (get_extension(ac.output).compare("ppt") == 0) {
-					ac.out.ftype = fileType::PPT;
+					out.ftype = fileType::PPT;
 				}
 			
 				else if (ac.output.compare("database") == 0) {
-					ac.out.ftype = fileType::DB;
+					out.ftype = fileType::DB;
 				}
+				ac.out.push_back(out);
 			}
 			next_name = 0;
 			continue;
@@ -2052,35 +2153,35 @@ v<dataAction> parseQuery (std::string query) {
 			system(token.c_str());
 		}
 		else if (next_named_column) {
-			if (ac.out.c.size() > 0) {
+			if (ac.out.at(ac.out.size() - 1).c.size() > 0) {
 				column c;
-				c.position = ac.out.c.size() + 1;
+				c.position = ac.out.at(ac.out.size() - 1).c.size() + 1;
 				c.name = token;
 				
-				ac.out.c.push_back(c);
+				ac.out.at(ac.out.size() - 1).c.push_back(c);
 			}
 			else {
-				ac.in.name = token;
+				ac.in.at(ac.in.size() - 1).name = token;
 				column c;
-				c.position = ac.in.c.size() + 1;
+				c.position = ac.in.at(ac.in.size() - 1).c.size() + 1;
 				c.name = token;
 
-				ac.in.c.push_back(c);
+				ac.in.at(ac.in.size() - 1).c.push_back(c);
 			}
 			next_named_column = 0;
 		}
 		else if (next_named_prec) {
-			var size = ac.in.c.size();
+			var size = ac.in.at(ac.in.size() - 1).c.size();
 			if (size == 0) {
 				// Error need named_col
 				report_err("Precede precisions specification with a named column.");
 			}
 			else if (size > 0) {
-				if (ac.out.c.size() > 0) {
-					ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
+				if (ac.out.at(ac.out.size() - 1).c.size() > 0) {
+					ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).prec = atoi(token.c_str());
 				}
 				else {
-					ac.in.c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).prec = atoi(token.c_str());
 				//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 			}
@@ -2088,72 +2189,78 @@ v<dataAction> parseQuery (std::string query) {
 		}
 
 		else if (next_named_size) {
-			var size = ac.in.c.size();
+			var size = ac.in.at(ac.in.size() - 1).c.size();
 			if (size == 0) {
 				// Error need named_col
 				report_err("Precede size specification with a named column.");
 			}
 			else if (size > 0) {
-				if (ac.out.c.size() > 0) {
-					ac.out.c.at(ac.out.c.size() - 1).size = atoi(token.c_str());
+				if (ac.out.at(ac.out.size() - 1).c.size() > 0) {
+					ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).size = atoi(token.c_str());
 				}
 				else {
-					ac.in.c.at(ac.in.c.size() - 1).size = atoi(token.c_str());
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).size = atoi(token.c_str());
 					//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 			}
 			next_named_size = 0;
 		}
+		else if (next_named_key) {
+			sort_key sk;
+			sk.c = find_sort_key(token, ac);
+			ac.out.at(ac.out.size() - 1).sort_keys.push_back(sk);
+			
+		}
 		else if (next_named_dt) {
 		//
-			//var size = ac.in.c.size();
+			//var size = ac.in.at(ac.in.size() - 1).c.size();
 			//if (size == 0) {
 
 			//}
 			//else if (size > 0) {
 			//	//if (ac.out.)
 			//}
-			var size = ac.in.c.size();
+			var size = ac.in.at(ac.in.size() - 1).c.size();
 			if (size == 0) {
 				// Error need named_col
 				report_err("Precede data type specification with a named column.");
 			}
 			if (size > 0) {
-				if (ac.out.c.size() > 0) {
+				if (ac.out.at(ac.out.size() - 1).c.size() > 0) {
 					if (token.compare("numeric") == 0 || token.compare("num") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::NUMERIC;
+						ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).dt = dataTypeType::NUMERIC;
 					}
 					else if (token.compare("time") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIME;
+						ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).dt = dataTypeType::TIME;
 					}
 					else if (token.compare("date") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::DATE;
+						ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).dt = dataTypeType::DATE;
 					}
 					if (token.compare("utf8") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::UTF8;
+						ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).dt = dataTypeType::UTF8;
 					}
 					if (token.compare("timestamp") == 0) {
-						ac.out.c.at(ac.out.c.size() - 1).dt = dataTypeType::TIMESTAMP;
+						ac.out.at(ac.out.size() - 1).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).dt = dataTypeType::TIMESTAMP;
 					}
 					// = atoi(token.c_str());
 				}
 				else {
 					if (token.compare("numeric") == 0 || token.compare("num") == 0) {
-						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::NUMERIC;
+						ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).dt = dataTypeType::NUMERIC;
 					}
 					else if (token.compare("time") == 0) {
-						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::TIME;
+						ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).dt = dataTypeType::TIME;
 					}
 					else if (token.compare("date") == 0) {
-						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::DATE;
+						ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).dt = dataTypeType::DATE;
 					}
 					if (token.compare("utf8") == 0) {
-						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::UTF8;
+						ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).dt = dataTypeType::UTF8;
 					}
 					if (token.compare("timestamp") == 0) {
-						ac.in.c.at(ac.in.c.size() - 1).dt = dataTypeType::TIMESTAMP;
+						ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).dt = dataTypeType::TIMESTAMP;
 					}
-					// ac.in.c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
+					// ac.in.at(ac.in.size() - 1).c.at(ac.in.c.size() - 1).prec = atoi(token.c_str());
 					//	ac.out.c.at(ac.out.c.size() - 1).prec = atoi(token.c_str());
 				}
 			}
@@ -2172,8 +2279,12 @@ v<dataAction> parseQuery (std::string query) {
 		else if (token.compare("named_column") == 0) {
 			next_named_column = 1;
 		}
+		else if (token.compare("key") == 0) {
+			next_named_key = 1;
+		}
 		else if (token.compare("nc") == 0) {
 			next_named_column = 1;
+			
 		}
 		else if (token.compare("dt") == 0) {
 			next_named_dt = 1;
@@ -2270,14 +2381,19 @@ v<dataAction> parseQuery (std::string query) {
 			ac.sort_options.type = dataTypeType::NUMERIC;
 		}
 		else if (token.compare("names") == 0) {
-			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
-				ac.in.c.at(ac.in.c.size() - 1).gend = generateDataType::name;
-			}
-			else if (ac.out.c.size() > 0) {
-				ac.out.c.at(ac.out.c.size() - 1).gend = generateDataType::name;
+			if (ac.in.size() == 0) {
+				ac.dd = generateDataType::name;
 			}
 			else {
-				ac.dd = generateDataType::name;
+				if (ac.in.at(ac.in.size() - 1).c.size() > 0 && ac.out.at(ac.out.size() - 1).c.size() == 0) {
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).gend = generateDataType::name;
+				}
+				else if (ac.out.at(ac.out.size()).c.size() > 0) {
+					ac.out.at(ac.out.size()).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).gend = generateDataType::name;
+				}
+				else {
+					ac.dd = generateDataType::name;
+				}
 			}
 		}
 		else if (token.compare("spec") == 0 || token.compare("specification") == 0) {
@@ -2291,43 +2407,57 @@ v<dataAction> parseQuery (std::string query) {
 		}
 
 		else if (token.compare("ssn")== 0) {
-			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
-				ac.in.c.at(ac.in.c.size() - 1).gend = generateDataType::ssn;
-			}
-			else if (ac.out.c.size() > 0) {
-				ac.out.c.at(ac.out.c.size() - 1).gend = generateDataType::ssn;
-			}
-			else {
+			if (ac.in.size() == 0) {
 				ac.dd = generateDataType::ssn;
 			}
-
+			else {
+				if (ac.in.at(ac.in.size() - 1).c.size() > 0 && ac.out.at(ac.out.size() - 1).c.size() == 0) {
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).gend = generateDataType::ssn;
+				}
+				else if (ac.out.at(ac.out.size()).c.size() > 0) {
+					ac.out.at(ac.out.size()).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).gend = generateDataType::ssn;
+				}
+				else {
+					ac.dd = generateDataType::ssn;
+				}
+			}
 			//ac.dd = generateDataType::ssn;
 		}
 
 		else if (token.compare("email") == 0) {
-			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
-				ac.in.c.at(ac.in.c.size() - 1).gend = generateDataType::email;
-			}
-			else if (ac.out.c.size() > 0) {
-				ac.out.c.at(ac.out.c.size() - 1).gend = generateDataType::email;
+			if (ac.in.size() == 0) {
+				ac.dd = generateDataType::email;
 			}
 			else {
-				ac.dd = generateDataType::email;
+				if (ac.in.at(ac.in.size() - 1).c.size() > 0 && ac.out.at(ac.out.size() - 1).c.size() == 0) {
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).gend = generateDataType::email;
+				}
+				else if (ac.out.at(ac.out.size()).c.size() > 0) {
+					ac.out.at(ac.out.size()).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).gend = generateDataType::email;
+				}
+				else {
+					ac.dd = generateDataType::tool;
+				}
 			}
 			//ac.dd = generateDataType::email;
 		}
 		else if (token.compare("tool") == 0) {
-			if (ac.in.c.size() > 0 && ac.out.c.size() == 0) {
-				ac.in.c.at(ac.in.c.size() - 1).gend = generateDataType::tool;
-			}
-			else if (ac.out.c.size() > 0) {
-				ac.out.c.at(ac.out.c.size() - 1).gend = generateDataType::tool;
-			}
-			else {
+			if (ac.in.size() == 0) {
 				ac.dd = generateDataType::tool;
 			}
-			//ac.dd = generateDataType::email;
+			else {
+				if (ac.in.at(ac.in.size() - 1).c.size() > 0 && ac.out.at(ac.out.size() - 1).c.size() == 0) {
+					ac.in.at(ac.in.size() - 1).c.at(ac.in.at(ac.in.size() - 1).c.size() - 1).gend = generateDataType::tool;
+				}
+				else if (ac.out.at(ac.out.size()).c.size() > 0) {
+					ac.out.at(ac.out.size()).c.at(ac.out.at(ac.out.size() - 1).c.size() - 1).gend = generateDataType::tool;
+				}
+				else {
+					ac.dd = generateDataType::tool;
+				}
+				//ac.dd = generateDataType::email;
 			}
+		}
 
 		else if (token.compare("and") == 0) {
 			actions.push_back(ac);
@@ -2403,6 +2533,7 @@ int update_num_queries_used(std::string filename) {
 		char buffer[1000] = { 0 };
 		sprintf(buffer, "%d", num_queries);
 		fwrite(buffer, 1000, 1, f);
+		fclose(f);
 		return 0;
 	}
 	else {

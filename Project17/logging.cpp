@@ -44,6 +44,15 @@ public:
 	logger(std::string fname) {
 		file_name = fname;
 	}
+	void log_error(std::string message) {
+		log_it("Error: " + message);
+	}
+	void log_info(std::string message) {
+		log_it("Info: " + message);
+	}
+	void log_warning(std::string message) {
+		log_it("Warning: " + message);
+	}
 	void log_it(std::string message) {
 		switch (logT)
 		{

@@ -107,6 +107,8 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\Devon\source\repos\cosort\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\pugixml;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\zippy;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\implementation\headers;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\interfaces\c++\headers;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,6 +141,8 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\Users\Devon\source\repos\cosort\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\pugixml;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\zippy;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\implementation\headers;..\..\src\modules\xlsx\thirdPartyLibs\xlsx\library\openxlsx\interfaces\c++\headers;</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
